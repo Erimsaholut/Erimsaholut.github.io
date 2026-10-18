@@ -147,7 +147,7 @@ function glowMaterial() {
   });
 }
 
-export default function CloudGlobe({ dots, reduce }: { dots: number; reduce: boolean }) {
+export default function CloudGlobe({ dots, reduce, fill = false }: { dots: number; reduce: boolean; fill?: boolean }) {
   const root = useRef<THREE.Group>(null!);
   const tilt = useRef<THREE.Group>(null!);
   const spin = useRef<THREE.Group>(null!);
@@ -257,23 +257,30 @@ export default function CloudGlobe({ dots, reduce }: { dots: number; reduce: boo
 
   useFrame((state, dt) => {
     const g = root.current;
-    if (!anchor.current || !anchor.current.isConnected) anchor.current = document.querySelector("[data-globe-anchor]");
-    const el = anchor.current;
-    if (!el) {
-      g.visible = false;
-      return;
-    }
-    const rect = el.getBoundingClientRect();
-    const { width: sw, height: sh } = state.size;
     const vp = state.viewport;
-    const cx = rect.left + rect.width / 2;
-    const cy = rect.top + rect.height / 2;
-    g.position.set((cx / sw - 0.5) * vp.width, -(cy / sh - 0.5) * vp.height, 0);
-    const worldR = (Math.min(rect.width, rect.height) / sh) * vp.height * 0.34;
-    const scale = worldR / R;
+    let scale: number;
+    let visible: number;
+    if (fill) {
+      g.position.set(0, 0, 0);
+      scale = (Math.min(vp.width, vp.height) * 0.27) / R;
+      visible = 1;
+    } else {
+      if (!anchor.current || !anchor.current.isConnected) anchor.current = document.querySelector("[data-globe-anchor]");
+      const el = anchor.current;
+      if (!el) {
+        g.visible = false;
+        return;
+      }
+      const rect = el.getBoundingClientRect();
+      const { width: sw, height: sh } = state.size;
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+      g.position.set((cx / sw - 0.5) * vp.width, -(cy / sh - 0.5) * vp.height, 0);
+      scale = ((Math.min(rect.width, rect.height) / sh) * vp.height * 0.34) / R;
+      visible = clamp((Math.min(rect.bottom, sh) - Math.max(rect.top, 0)) / Math.max(rect.height, 1), 0, 1);
+    }
     g.scale.setScalar(scale);
 
-    const visible = clamp((Math.min(rect.bottom, sh) - Math.max(rect.top, 0)) / Math.max(rect.height, 1), 0, 1);
     opacity.current = reduce ? visible : opacity.current + (visible - opacity.current) * Math.min(1, dt * 3);
     const o = opacity.current;
     g.visible = o > 0.01;
@@ -281,6 +288,8 @@ export default function CloudGlobe({ dots, reduce }: { dots: number; reduce: boo
 
     const t = reduce ? 3 : state.clock.elapsedTime;
     const pr = state.gl.getPixelRatio();
+    // Point sprites are sized in pixels; tie them to the globe's on-screen size (tuned at 800px tall).
+    const pointScale = scale * (state.size.height / 800);
     spin.current.rotation.y = scene.initialSpin + (reduce ? 0 : t * 0.07);
     tilt.current.rotation.x += (0.32 - input.py * 0.18 - tilt.current.rotation.x) * 0.05;
     tilt.current.rotation.z += (-input.px * 0.1 - tilt.current.rotation.z) * 0.05;
@@ -288,7 +297,7 @@ export default function CloudGlobe({ dots, reduce }: { dots: number; reduce: boo
     for (const m of [scene.dotMat, scene.hubMat, scene.packetMat, scene.satMat]) {
       m.uniforms.uOpacity.value = o;
       if (m.uniforms.uPixelRatio) m.uniforms.uPixelRatio.value = pr;
-      if (m.uniforms.uScale) m.uniforms.uScale.value = scale;
+      if (m.uniforms.uScale) m.uniforms.uScale.value = pointScale;
     }
     scene.occluderMat.opacity = o * 0.93;
     scene.rimMat.uniforms.uOpacity.value = o;

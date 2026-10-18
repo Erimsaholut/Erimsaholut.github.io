@@ -25,3 +25,9 @@ export function hasWebGL() {
 }
 
 export const clamp = (v: number, a: number, b: number) => Math.min(b, Math.max(a, v));
+
+/** Phones and tablets: touch-first or narrow screens get the lightweight 3D mode. */
+export function isLiteDevice() {
+  if (typeof window === "undefined") return false;
+  return window.matchMedia("(pointer: coarse)").matches || window.innerWidth < 768;
+}

@@ -1,8 +1,13 @@
-import { motion } from "framer-motion";
+import { lazy, Suspense, useMemo } from "react";
+import { motion, useReducedMotion } from "framer-motion";
+import SafeBoundary from "../three/SafeBoundary";
+import { hasWebGL, isLiteDevice } from "../three/input";
 import { EASE } from "./Section";
 import { ArrowDown, Pin } from "./Icons";
 import { CountUp, Magnetic, Typewriter } from "./Effects";
 import { FOCUS_WORDS, PROFILE, STATS } from "../data";
+
+const HeroGlobe = lazy(() => import("../three/HeroGlobe"));
 
 const up = (delay: number) => ({
   initial: { opacity: 0, y: 22 },
@@ -12,6 +17,8 @@ const up = (delay: number) => ({
 
 export default function Hero() {
   const words = PROFILE.name.split(" ");
+  const reduce = !!useReducedMotion();
+  const localGlobe = useMemo(() => isLiteDevice() && hasWebGL(), []);
 
   return (
     <section id="top" className="relative overflow-hidden pt-28 md:pt-32">
@@ -86,13 +93,21 @@ export default function Hero() {
           </motion.div>
         </div>
 
-        {/* The WebGL globe renders over this box (see three/CloudGlobe.tsx). */}
+        {/* Desktop: the page-wide WebGL layer draws the globe over this box. Phones: it gets its own canvas. */}
         <motion.div
           {...up(0.3)}
           data-globe-anchor
           className="relative mx-auto aspect-square w-full max-w-[600px] lg:col-span-6 lg:-mr-10"
           aria-hidden
-        />
+        >
+          {localGlobe && (
+            <SafeBoundary>
+              <Suspense fallback={null}>
+                <HeroGlobe reduce={reduce} />
+              </Suspense>
+            </SafeBoundary>
+          )}
+        </motion.div>
       </div>
 
       <motion.dl {...up(1)} className="relative mx-auto mt-6 grid max-w-6xl grid-cols-2 border-t border-line md:grid-cols-4 md:px-8">

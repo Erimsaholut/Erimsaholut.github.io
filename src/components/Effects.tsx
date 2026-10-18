@@ -71,11 +71,11 @@ export function TiltCard({ children, className = "" }: { children: ReactNode; cl
       ref={ref}
       onPointerMove={onMove}
       onPointerLeave={onLeave}
-      className={`group/tilt relative h-full transition-transform duration-300 ease-out will-change-transform ${className}`}
+      className={`group/tilt relative h-full transition-transform duration-300 ease-out [@media(pointer:fine)]:will-change-transform ${className}`}
     >
       {children}
       <div
-        className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-300 group-hover/tilt:opacity-100"
+        className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-300 [@media(hover:hover)]:group-hover/tilt:opacity-100"
         style={{ background: "radial-gradient(520px circle at var(--gx, 50%) var(--gy, 50%), rgba(255,181,71,0.13), transparent 42%)" }}
         aria-hidden
       />

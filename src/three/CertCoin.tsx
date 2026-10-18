@@ -1,4 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useOnScreen } from "./useOnScreen";
+import { isLiteDevice } from "./input";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
@@ -163,6 +165,9 @@ function Coin({ face, reduce }: { face: THREE.Texture; reduce: boolean }) {
 
 export default function CertCoin({ reduce }: { reduce: boolean }) {
   const [face, setFace] = useState<THREE.Texture | null>(null);
+  const box = useRef<HTMLDivElement>(null);
+  const onScreen = useOnScreen(box);
+  const lite = useMemo(() => isLiteDevice(), []);
 
   useEffect(() => {
     let alive = true;
@@ -178,12 +183,20 @@ export default function CertCoin({ reduce }: { reduce: boolean }) {
   }, []);
 
   return (
-    <Canvas dpr={[1, 2]} camera={{ position: [0, 0, 3.6], fov: 38 }} gl={{ antialias: true, alpha: true }} frameloop={reduce ? "demand" : "always"}>
+    <div ref={box} className="h-full w-full">
+    <Canvas
+      dpr={[1, lite ? 1.5 : 2]}
+      camera={{ position: [0, 0, 3.6], fov: 38 }}
+      gl={{ antialias: true, alpha: true, powerPreference: lite ? "low-power" : "default" }}
+      frameloop={reduce ? "demand" : onScreen ? "always" : "never"}
+      style={lite ? { pointerEvents: "none" } : undefined}
+    >
       <Environment />
       <ambientLight intensity={0.35} />
       <directionalLight position={[3, 4, 5]} intensity={1.4} />
       <pointLight position={[-3, -2, 3]} intensity={10} color="#FFB547" />
       {face && <Coin face={face} reduce={reduce} />}
     </Canvas>
+    </div>
   );
 }

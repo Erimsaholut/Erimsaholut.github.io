@@ -11,24 +11,25 @@ import Contact from "./components/Contact";
 import Footer from "./components/Footer";
 import { CursorGlow, ScrollProgress } from "./components/Effects";
 import SafeBoundary from "./three/SafeBoundary";
-import { hasWebGL } from "./three/input";
+import { hasWebGL, isLiteDevice } from "./three/input";
 
 const BackgroundScene = lazy(() => import("./three/BackgroundScene"));
 
 export default function App() {
   const reduce = !!useReducedMotion();
   const webgl = useMemo(() => hasWebGL(), []);
+  const lite = useMemo(() => isLiteDevice(), []);
 
   return (
     <MotionConfig reducedMotion="user">
-      {webgl && (
+      {webgl && !lite && (
         <SafeBoundary>
           <Suspense fallback={null}>
             <BackgroundScene reduce={reduce} />
           </Suspense>
         </SafeBoundary>
       )}
-      <CursorGlow />
+      {!lite && <CursorGlow />}
       <ScrollProgress />
       <Nav />
       <div className="relative z-10">

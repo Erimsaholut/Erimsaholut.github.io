@@ -17,20 +17,19 @@ function RedrawOnScroll() {
   return null;
 }
 
-/** One fixed, full-screen WebGL layer behind the page: particles + the hero globe. */
+/** Desktop only: one fixed, full-screen WebGL layer behind the page — particles + the hero globe. */
 export default function BackgroundScene({ reduce }: { reduce: boolean }) {
-  const mobile = window.innerWidth < 768;
   return (
     <div className="pointer-events-none fixed inset-0 z-0" aria-hidden>
       <Canvas
-        dpr={[1, mobile ? 1.5 : 1.75]}
+        dpr={[1, 1.75]}
         camera={{ position: [0, 0, 8], fov: 45 }}
         gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
         frameloop={reduce ? "demand" : "always"}
       >
         {reduce && <RedrawOnScroll />}
-        <DataDust count={mobile ? 650 : 1500} reduce={reduce} />
-        <CloudGlobe dots={mobile ? 1400 : 2600} reduce={reduce} />
+        <DataDust count={1500} reduce={reduce} />
+        <CloudGlobe dots={2600} reduce={reduce} />
       </Canvas>
     </div>
   );

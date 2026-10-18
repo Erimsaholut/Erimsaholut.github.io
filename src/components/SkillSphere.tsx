@@ -4,6 +4,8 @@ import { SKILLS } from "../data";
 
 type Tone = "cloud" | "found" | "base";
 
+const SHORT: Record<string, string> = { "Object-Oriented Programming": "OOP", "Agile / Scrum": "Agile" };
+
 /** Skill tags distributed on a rotating sphere; steer it by moving the pointer over it. */
 export default function SkillSphere() {
   const box = useRef<HTMLDivElement>(null);
@@ -17,7 +19,7 @@ export default function SkillSphere() {
       g.items.forEach((label) => {
         if (seen.has(label)) return;
         seen.add(label);
-        out.push({ label, tone: g.foundational ? "found" : g.group.startsWith("Cloud") ? "cloud" : "base" });
+        out.push({ label: SHORT[label] ?? label, tone: g.foundational ? "found" : g.group.startsWith("Cloud") ? "cloud" : "base" });
       })
     );
     return out;
@@ -35,6 +37,7 @@ export default function SkillSphere() {
 
   useEffect(() => {
     const el = box.current!;
+    const fine = window.matchMedia("(pointer: fine)").matches;
     let raf = 0;
     let visible = false;
     let ax = 0.35;
@@ -46,7 +49,9 @@ export default function SkillSphere() {
     let tvy = vy;
 
     const render = () => {
-      const R = el.clientWidth * 0.38;
+      // Keep the widest tag inside the box.
+      const widest = Math.max(...tags.current.map((n) => n?.offsetWidth ?? 0));
+      const R = Math.max(el.clientWidth * 0.26, Math.min(el.clientWidth * 0.38, el.clientWidth / 2 - widest / 2 - 6));
       const cx = Math.cos(ax), sx = Math.sin(ax), cy = Math.cos(ay), sy = Math.sin(ay);
       points.forEach(([x, y, z], i) => {
         const x1 = x * cy + z * sy;
@@ -59,7 +64,7 @@ export default function SkillSphere() {
         node.style.transform = `translate3d(${(x1 * R).toFixed(1)}px, ${(y2 * R).toFixed(1)}px, 0) translate(-50%, -50%) scale(${(0.6 + 0.4 * depth).toFixed(3)})`;
         node.style.opacity = (0.18 + 0.82 * depth).toFixed(3);
         node.style.zIndex = String(Math.round(depth * 100));
-        node.style.filter = depth < 0.35 ? `blur(${((0.35 - depth) * 4).toFixed(1)}px)` : "";
+        if (fine) node.style.filter = depth < 0.35 ? `blur(${((0.35 - depth) * 4).toFixed(1)}px)` : "";
       });
     };
 
@@ -73,6 +78,7 @@ export default function SkillSphere() {
     };
 
     const onMove = (e: PointerEvent) => {
+      if (e.pointerType !== "mouse") return;
       const r = el.getBoundingClientRect();
       tvy = ((e.clientX - r.left) / r.width - 0.5) * 0.035;
       tvx = -((e.clientY - r.top) / r.height - 0.5) * 0.035;
@@ -107,7 +113,7 @@ export default function SkillSphere() {
   };
 
   return (
-    <div ref={box} className="relative mx-auto aspect-square w-full max-w-[460px] select-none" aria-hidden>
+    <div ref={box} className="relative mx-auto aspect-square w-full max-w-[460px] select-none overflow-hidden" aria-hidden>
       <div className="absolute inset-0 rounded-full bg-[radial-gradient(circle,rgba(255,181,71,0.12),transparent_62%)]" />
       <svg className="absolute inset-[6%] h-[88%] w-[88%] animate-[spin_40s_linear_infinite] motion-reduce:animate-none" viewBox="0 0 100 100">
         <ellipse cx="50" cy="50" rx="48" ry="16" fill="none" stroke="#272C24" strokeWidth="0.4" />
@@ -121,7 +127,7 @@ export default function SkillSphere() {
             ref={(n) => {
               tags.current[i] = n;
             }}
-            className={`absolute left-0 top-0 whitespace-nowrap rounded-md px-2.5 py-1 text-sm font-medium will-change-transform ${toneClass[it.tone]}`}
+            className={`absolute left-0 top-0 whitespace-nowrap rounded-md px-2 py-0.5 text-xs font-medium will-change-transform sm:px-2.5 sm:py-1 sm:text-sm ${toneClass[it.tone]}`}
           >
             {it.label}
           </span>

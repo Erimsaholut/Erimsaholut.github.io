@@ -11,7 +11,7 @@ export default function Projects() {
         {PROJECTS.map((p, i) => (
           <Reveal key={p.title} delay={(i % 2) * 0.08} className="h-full">
             <TiltCard>
-            <article className="group flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-surface transition-colors duration-300 hover:border-amber/40">
+            <article className="group isolate flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-surface transition-colors duration-300 [@media(hover:hover)]:hover:border-amber/40">
               <div className="aspect-[16/9] border-b border-line bg-raised">
                 <ProjectArt kind={p.art} />
               </div>
