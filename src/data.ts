@@ -30,9 +30,9 @@ export const FACTS = [
 ];
 
 export const LANGUAGES = [
-  { name: "Turkish", level: "Native", score: 5 },
-  { name: "English", level: "Fluent — C1", score: 4 },
-  { name: "Italian", level: "Learning", score: 1 },
+  { name: "Turkish", level: "Native" },
+  { name: "English", level: "Fluent — C1" },
+  { name: "Italian", level: "Learning" },
 ];
 
 export type ArtKind = "kiosk" | "cafe" | "chat" | "data";

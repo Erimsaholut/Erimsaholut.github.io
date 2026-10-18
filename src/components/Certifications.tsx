@@ -4,7 +4,7 @@ import { CERTS, FEATURED_CERT } from "../data";
 
 export default function Certifications() {
   return (
-    <Section id="certifications" index="05" label="Certifications" title="Always learning something.">
+    <Section id="certifications" index="04" label="Certifications" title="Always learning something.">
       <div className="grid gap-6 md:grid-cols-12">
         <Reveal className="md:col-span-5">
           <div className="relative h-full overflow-hidden rounded-2xl border border-amber/40 bg-gradient-to-br from-amber/15 via-surface to-surface p-7 md:p-8">

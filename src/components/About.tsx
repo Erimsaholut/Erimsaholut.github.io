@@ -21,16 +21,9 @@ export default function About() {
               <dt className="mb-4 font-mono text-xs uppercase tracking-wider text-faint">Languages</dt>
               <dd className="space-y-3">
                 {LANGUAGES.map((l) => (
-                  <div key={l.name} className="flex items-center justify-between gap-4">
-                    <div>
-                      <span className="text-sm text-ink">{l.name}</span>
-                      <span className="ml-2 text-xs text-muted">{l.level}</span>
-                    </div>
-                    <div className="flex gap-1" role="img" aria-label={`${l.score} out of 5`}>
-                      {Array.from({ length: 5 }, (_, i) => (
-                        <span key={i} className={`h-1.5 w-5 rounded-full ${i < l.score ? "bg-amber" : "bg-line"}`} />
-                      ))}
-                    </div>
+                  <div key={l.name} className="flex items-baseline justify-between gap-4">
+                    <span className="text-sm text-ink">{l.name}</span>
+                    <span className="text-sm text-muted">{l.level}</span>
                   </div>
                 ))}
               </dd>

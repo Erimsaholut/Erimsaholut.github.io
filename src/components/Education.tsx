@@ -4,7 +4,7 @@ import { EDUCATION } from "../data";
 
 export default function Education() {
   return (
-    <Section id="education" index="04" label="Education" title="Two universities, two countries.">
+    <Section id="education" index="05" label="Education" title="Two universities, two countries.">
       <ol className="relative space-y-6 md:pl-10">
         <span className="absolute left-[11px] top-3 bottom-3 hidden w-px bg-line md:block" aria-hidden />
         {EDUCATION.map((e, i) => (
