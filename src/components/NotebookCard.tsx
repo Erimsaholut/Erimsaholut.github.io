@@ -29,7 +29,7 @@ function PlotCanvas({ startDelay }: { startDelay: number }) {
     let h = 0;
     let raf = 0;
     let visible = true;
-    const start = performance.now() + startDelay;
+    let start = Infinity;
     const DURATION = 2400;
 
     const resize = () => {
@@ -140,6 +140,7 @@ function PlotCanvas({ startDelay }: { startDelay: number }) {
     ro.observe(canvas);
     const io = new IntersectionObserver(([e]) => {
       visible = e.isIntersecting;
+      if (visible && start === Infinity) start = performance.now() + startDelay;
       cancelAnimationFrame(raf);
       if (visible) raf = requestAnimationFrame(draw);
     });
@@ -189,7 +190,8 @@ export default function NotebookCard() {
             <motion.div
               key={i}
               initial={reduce ? false : { opacity: 0, x: -6 }}
-              animate={{ opacity: 1, x: 0 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
               transition={{ delay: 0.6 + i * lineDelay, duration: 0.3 }}
             >
               {line.map(([t, c], j) => (

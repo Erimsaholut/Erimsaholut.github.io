@@ -2,9 +2,9 @@
 
 Live at **https://erimsaholut.github.io**
 
-Personal portfolio site, built with React, TypeScript, Vite, Tailwind CSS and Framer Motion.
+Personal portfolio site, built with React, TypeScript, Vite, Tailwind CSS, Framer Motion and Three.js (React Three Fiber).
 
-All graphics are drawn in code (SVG / canvas). Fonts are self-hosted from Fontsource (SIL Open Font License).
+All graphics and 3D models are generated in code (SVG, canvas and WebGL) — no external images, models or textures. Fonts are self-hosted from Fontsource (SIL Open Font License).
 
 ## Develop
 

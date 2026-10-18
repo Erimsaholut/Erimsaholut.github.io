@@ -1,6 +1,7 @@
 import Section, { Reveal } from "./Section";
 import ProjectArt from "./ProjectArt";
 import { ArrowUpRight, Code } from "./Icons";
+import { TiltCard } from "./Effects";
 import { PROFILE, PROJECTS } from "../data";
 
 export default function Projects() {
@@ -8,7 +9,8 @@ export default function Projects() {
     <Section id="projects" index="02" label="Projects" title="Things I've built, for clients and for myself.">
       <div className="grid gap-5 md:grid-cols-2">
         {PROJECTS.map((p, i) => (
-          <Reveal key={p.title} delay={(i % 2) * 0.08}>
+          <Reveal key={p.title} delay={(i % 2) * 0.08} className="h-full">
+            <TiltCard>
             <article className="group flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-surface transition-colors duration-300 hover:border-amber/40">
               <div className="aspect-[16/9] border-b border-line bg-raised">
                 <ProjectArt kind={p.art} />
@@ -49,6 +51,7 @@ export default function Projects() {
                 </div>
               </div>
             </article>
+            </TiltCard>
           </Reveal>
         ))}
 

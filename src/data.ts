@@ -14,6 +14,8 @@ export const PROFILE = {
     "I'm a Computer Engineering student at Politecnico di Torino, focused on cloud computing and AWS. I hold the AWS Certified Cloud Practitioner credential, and I've built several Flutter apps — including freelance work — on real-time Firebase backends, which taught me to turn real-world requirements into working systems. I also enjoy data analysis with Python. My goal is to grow into a solutions engineering role, and I'm looking for an internship where I can gain industry experience on real cloud problems.",
 };
 
+export const FOCUS_WORDS = ["cloud computing.", "AWS.", "backend systems."];
+
 export const STATS = [
   { value: "AWS", label: "Certified Cloud Practitioner" },
   { value: "3.62", label: "GPA at Celal Bayar University" },
