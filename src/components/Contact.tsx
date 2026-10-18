@@ -1,0 +1,82 @@
+import { useState } from "react";
+import Section, { Reveal } from "./Section";
+import { ArrowUpRight, Check, Code, Copy, Mail, Person, Pin } from "./Icons";
+import { PROFILE } from "../data";
+
+export default function Contact() {
+  const [copied, setCopied] = useState(false);
+
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(PROFILE.email);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1800);
+    } catch {
+      window.location.href = `mailto:${PROFILE.email}`;
+    }
+  };
+
+  const links = [
+    { label: "GitHub", sub: PROFILE.github.label, href: PROFILE.github.url, icon: Code },
+    { label: "LinkedIn", sub: PROFILE.linkedin.label, href: PROFILE.linkedin.url, icon: Person },
+  ];
+
+  return (
+    <Section id="contact" index="06" label="Contact" title={<>Let's talk. <span className="text-muted">I'm looking for an internship.</span></>}>
+      <Reveal>
+        <div className="relative overflow-hidden rounded-3xl border border-line bg-surface p-7 md:p-12">
+          <div className="graph-paper pointer-events-none absolute inset-0 opacity-70" aria-hidden />
+          <div className="relative grid gap-10 md:grid-cols-12 md:items-end">
+            <div className="md:col-span-7">
+              <p className="max-w-md text-lg text-muted">
+                Have a role, a project or a question? Send me an email.
+              </p>
+              <div className="mt-8 flex flex-wrap items-center gap-3">
+                <a
+                  href={`mailto:${PROFILE.email}`}
+                  className="inline-flex items-center gap-3 rounded-md bg-amber px-5 py-3.5 font-medium text-bg transition hover:bg-amber/90"
+                >
+                  <Mail className="w-5 h-5" />
+                  <span className="break-all">{PROFILE.email}</span>
+                </a>
+                <button
+                  onClick={copy}
+                  className="inline-flex items-center gap-2 rounded-md border border-line bg-bg/60 px-4 py-3.5 text-sm text-ink transition hover:border-ink/30"
+                  aria-live="polite"
+                >
+                  {copied ? <Check className="w-4 h-4 text-sage" /> : <Copy className="w-4 h-4" />}
+                  {copied ? "Copied" : "Copy"}
+                </button>
+              </div>
+              <p className="mt-6 inline-flex items-center gap-2 text-sm text-faint">
+                <Pin className="w-4 h-4" /> {PROFILE.location}
+              </p>
+            </div>
+
+            <ul className="space-y-3 md:col-span-5">
+              {links.map(({ label, sub, href, icon: Icon }) => (
+                <li key={label}>
+                  <a
+                    href={href}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="group flex items-center gap-4 rounded-xl border border-line bg-bg/60 px-5 py-4 transition-colors hover:border-amber/50"
+                  >
+                    <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-raised text-amber">
+                      <Icon className="w-5 h-5" />
+                    </span>
+                    <span className="flex-1">
+                      <span className="block font-medium">{label}</span>
+                      <span className="block text-sm text-muted">{sub}</span>
+                    </span>
+                    <ArrowUpRight className="w-5 h-5 text-faint transition group-hover:text-amber group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </Reveal>
+    </Section>
+  );
+}
