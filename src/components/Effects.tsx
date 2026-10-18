@@ -71,7 +71,7 @@ export function TiltCard({ children, className = "" }: { children: ReactNode; cl
       ref={ref}
       onPointerMove={onMove}
       onPointerLeave={onLeave}
-      className={`group/tilt relative h-full transition-transform duration-300 ease-out [@media(pointer:fine)]:will-change-transform ${className}`}
+      className={`group/tilt relative md:h-full transition-transform duration-300 ease-out [@media(pointer:fine)]:will-change-transform ${className}`}
     >
       {children}
       <div

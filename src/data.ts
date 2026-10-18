@@ -47,15 +47,17 @@ export const PROJECTS: {
   highlights: string[];
   stack: string[];
   repo?: string;
+  live?: { url: string; label: string };
 }[] = [
   {
     title: "Vending Machine Kiosk App",
     type: "Freelance · Team project",
     art: "kiosk",
     description:
-      "A multilingual self-service beverage kiosk with a real-time Firestore backend. I implemented both the frontend and the backend.",
+      "A multilingual self-service beverage kiosk with a real-time Firestore backend, now running in production at Buzlime — a cold-drink vending startup. I implemented both the frontend and the backend.",
     highlights: ["Multilingual self-service UI", "Real-time stock & sales tracking", "Refund and maintenance logs"],
     stack: ["Flutter", "Firebase", "Firestore"],
+    live: { url: "https://buzlime.com", label: "buzlime.com" },
   },
   {
     title: "Real-Time Chat App",

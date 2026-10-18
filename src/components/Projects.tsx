@@ -9,15 +9,24 @@ export default function Projects() {
     <Section id="projects" index="02" label="Projects" title="Things I've built, for clients and for myself.">
       <div className="grid gap-5 md:grid-cols-2">
         {PROJECTS.map((p, i) => (
-          <Reveal key={p.title} delay={(i % 2) * 0.08} className="h-full">
+          <Reveal key={p.title} delay={(i % 2) * 0.08} className="md:h-full">
             <TiltCard>
-            <article className="group isolate flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-surface transition-colors duration-300 [@media(hover:hover)]:hover:border-amber/40">
-              <div className="aspect-[16/9] border-b border-line bg-raised">
-                <ProjectArt kind={p.art} />
+            <article className="group isolate flex flex-col md:h-full overflow-hidden rounded-2xl border border-line bg-surface transition-colors duration-300 [@media(hover:hover)]:hover:border-amber/40">
+              <div className="relative w-full shrink-0 overflow-hidden border-b border-line bg-raised pt-[56.25%]">
+                <div className="absolute inset-0">
+                  <ProjectArt kind={p.art} />
+                </div>
               </div>
               <div className="flex flex-1 flex-col gap-4 p-6 md:p-7">
-                <div className="flex items-center justify-between">
-                  <span className="eyebrow">{p.type}</span>
+                <div className="flex items-center justify-between gap-3">
+                  <span className="flex flex-wrap items-center gap-x-3 gap-y-1">
+                    <span className="eyebrow">{p.type}</span>
+                    {p.live && (
+                      <span className="inline-flex items-center gap-1.5 rounded-full border border-sage/30 bg-sage/10 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-sage">
+                        <span className="h-1.5 w-1.5 rounded-full bg-sage animate-pulse" /> Live
+                      </span>
+                    )}
+                  </span>
                   <span className="font-mono text-xs text-faint">{String(i + 1).padStart(2, "0")}</span>
                 </div>
                 <h3 className="font-display text-2xl font-semibold tracking-tight">{p.title}</h3>
@@ -38,16 +47,28 @@ export default function Projects() {
                       </span>
                     ))}
                   </div>
-                  {p.repo && (
-                    <a
-                      href={p.repo}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex items-center gap-1.5 text-sm font-medium text-ink hover:text-amber"
-                    >
-                      View code <ArrowUpRight className="w-4 h-4" />
-                    </a>
-                  )}
+                  <div className="flex flex-wrap items-center gap-4">
+                    {p.live && (
+                      <a
+                        href={p.live.url}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex items-center gap-1.5 rounded-md bg-amber px-3 py-1.5 text-sm font-semibold text-bg transition hover:bg-amber/90"
+                      >
+                        Visit {p.live.label} <ArrowUpRight className="w-4 h-4" />
+                      </a>
+                    )}
+                    {p.repo && (
+                      <a
+                        href={p.repo}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex items-center gap-1.5 text-sm font-medium text-ink hover:text-amber"
+                      >
+                        View code <ArrowUpRight className="w-4 h-4" />
+                      </a>
+                    )}
+                  </div>
                 </div>
               </div>
             </article>
