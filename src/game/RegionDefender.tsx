@@ -3,6 +3,7 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ABILITIES, CREDIT_RULES, Game, MAX_DOWN, type Ability, type HudState } from "./engine";
 import { gameOverlay } from "../three/gameOverlay";
 import { hasWebGL } from "../three/input";
+import { unlock } from "../secrets/store";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 const ORDER: Ability[] = ["shield", "scale", "pulse"];
@@ -171,6 +172,11 @@ export default function RegionDefender({ onClose, lite }: { onClose: () => void;
   }, [onClose]);
 
   // Show each banner for a moment.
+  const wave = hud?.wave ?? 0;
+  useEffect(() => {
+    if (wave >= 5) unlock("wave-5");
+  }, [wave]);
+
   const bannerId = hud?.banner?.id;
   useEffect(() => {
     if (!hud?.banner) return;

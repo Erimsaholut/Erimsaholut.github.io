@@ -4,7 +4,7 @@ import App from "./App";
 import "./index.css";
 
 console.log(
-  "%cHi there 👋%c\nCurious? Tap the last letter of my name three times.",
+  "%cHi there 👋%c\nThis site hides a few secrets. Start with the key above Tab — or the last letter of my name.",
   "font: 600 14px system-ui; color: #FFB547",
   "font: 12px system-ui; color: #A2A499"
 );

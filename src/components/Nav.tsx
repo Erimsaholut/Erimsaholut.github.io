@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import Logo from "./Logo";
 import { Close, Menu } from "./Icons";
@@ -13,7 +13,17 @@ const LINKS = [
   { id: "contact", label: "Contact" },
 ];
 
-export default function Nav() {
+export default function Nav({ onLogoSecret }: { onLogoSecret?: () => void }) {
+  const logoTaps = useRef<number[]>([]);
+  const onLogo = () => {
+    setOpen(false);
+    const now = Date.now();
+    logoTaps.current = [...logoTaps.current.filter((t) => now - t < 2500), now];
+    if (logoTaps.current.length >= 5) {
+      logoTaps.current = [];
+      onLogoSecret?.();
+    }
+  };
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [active, setActive] = useState("");
@@ -44,7 +54,7 @@ export default function Nav() {
       }`}
     >
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5 md:px-8">
-        <a href="#top" className="flex items-center gap-2.5 text-ink" onClick={() => setOpen(false)}>
+        <a href="#top" className="flex items-center gap-2.5 text-ink [-webkit-tap-highlight-color:transparent]" onClick={onLogo}>
           <Logo />
           <span className="font-display text-[17px] font-semibold tracking-tight">{PROFILE.name}</span>
         </a>

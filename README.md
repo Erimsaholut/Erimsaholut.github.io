@@ -18,3 +18,10 @@ Site content lives in `src/data.ts`.
 ## Deploy
 
 Every push to `main` builds the site and publishes it to GitHub Pages via `.github/workflows/deploy.yml`.
+
+## Easter eggs
+
+Secrets are listed in `src/secrets/registry.ts`. To add one, add an entry there and call
+`unlock("<id>")` (from `src/secrets/store.ts`) where it's triggered — the footer counter, the
+secrets panel and the "secret found" toast update automatically. Progress is stored in the
+visitor's browser only.

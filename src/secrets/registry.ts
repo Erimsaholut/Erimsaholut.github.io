@@ -1,0 +1,53 @@
+/*
+ * Every easter egg on the site. To add a new one:
+ *   1. add an entry here (the id is what you pass to `unlock`), and
+ *   2. call `unlock("<id>")` from src/secrets/store.ts where it's triggered.
+ * The footer counter, the secrets panel and the "secret found" toast pick it up automatically.
+ */
+export interface SecretDef {
+  id: string;
+  title: string;
+  /** Shown while still locked. */
+  hint: string;
+  /** Shown once found. */
+  found: string;
+}
+
+export const SECRETS: SecretDef[] = [
+  {
+    id: "last-letter",
+    title: "The last letter",
+    hint: "The last letter of my name hides something. Tap it three times.",
+    found: "Opened Region Defender from the title.",
+  },
+  {
+    id: "wave-5",
+    title: "Network engineer",
+    hint: "Keep the network online until wave 5.",
+    found: "Reached wave 5 in Region Defender.",
+  },
+  {
+    id: "terminal",
+    title: "Root access",
+    hint: "Press the key above Tab — or tap my logo five times.",
+    found: "Opened the hidden terminal.",
+  },
+  {
+    id: "explorer",
+    title: "Power user",
+    hint: "Get comfortable in the terminal: run 8 different commands.",
+    found: "Ran 8 different terminal commands.",
+  },
+  {
+    id: "hidden-file",
+    title: "Dotfile detective",
+    hint: "Some files only show up with the right flag.",
+    found: "Found and read the hidden file.",
+  },
+  {
+    id: "sudo-hire",
+    title: "Permission granted",
+    hint: "There's one command every recruiter should run.",
+    found: "Ran sudo hire erimsah.",
+  },
+];
