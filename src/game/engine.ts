@@ -11,11 +11,31 @@ import { Particles, arcMaterial, dotsMaterial, fresnelMaterial, glowTexture, mak
 export type Ability = "shield" | "scale" | "pulse";
 export type Phase = "intro" | "playing" | "paused" | "over";
 
-export const ABILITIES: Record<Ability, { name: string; cost: number; key: string; desc: string }> = {
-  shield: { name: "WAF Shield", cost: 25, key: "1", desc: "Blocks the next 3 hits on a region" },
-  scale: { name: "Auto Scaling", cost: 30, key: "2", desc: "+50 health, or brings a region back online" },
-  pulse: { name: "Edge Pulse", cost: 45, key: "3", desc: "Shockwave that clears nearby threats" },
+export const ABILITIES: Record<Ability, { name: string; cost: number; key: string; desc: string; how: string }> = {
+  shield: {
+    name: "WAF Shield",
+    cost: 25,
+    key: "1",
+    desc: "Puts a shield on one region. It absorbs the next 3 hits (lasts 25 s).",
+    how: "Tap the button, then tap a region on the globe.",
+  },
+  scale: {
+    name: "Auto Scaling",
+    cost: 30,
+    key: "2",
+    desc: "Repairs a region by +50 health — or brings a region that went down back online.",
+    how: "Tap the button, then tap a damaged or offline region.",
+  },
+  pulse: {
+    name: "Edge Pulse",
+    cost: 45,
+    key: "3",
+    desc: "A shockwave from the globe that destroys every threat close to it.",
+    how: "Fires instantly. Recharges for 12 seconds.",
+  },
 };
+
+export const CREDIT_RULES = "Earn credits by blocking packets (+4, purple +10) and by clearing waves.";
 
 export const MAX_DOWN = 4;
 const PULSE_CD = 12;
@@ -73,10 +93,14 @@ const HUBS: [string, number, number][] = [
   ["Singapore", 1.35, 103.82],
   ["Tokyo", 35.68, 139.69],
   ["Sydney", -33.87, 151.21],
+  ["Manisa", 38.62, 27.43],
 ];
 
+// Home regions (where I've studied) are drawn in amber.
+const isHome = (i: number) => i === 0 || i === 11;
+
 const ARCS: [number, number][] = [
-  [0, 1], [0, 2], [0, 3], [0, 4], [0, 7], [0, 8], [0, 9], [0, 6],
+  [0, 1], [0, 2], [0, 3], [0, 4], [0, 7], [0, 8], [0, 9], [0, 6], [0, 11], [11, 7], [11, 1],
   [4, 5], [4, 6], [2, 4], [8, 9], [8, 10], [7, 8], [1, 3], [5, 9],
 ];
 
@@ -283,9 +307,9 @@ export class Game {
       const local = latLon(la, lo);
       const normal = local.clone().normalize();
       const quat = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 0, 1), normal);
-      const color = i === 0 ? C.amber : C.sage;
+      const color = isHome(i) ? C.amber : C.sage;
 
-      const core = makeSprite(this.glow, color, i === 0 ? 0.3 : 0.22);
+      const core = makeSprite(this.glow, color, isHome(i) ? 0.3 : 0.22);
       core.position.copy(local).multiplyScalar(1.012);
 
       const ring = new THREE.Mesh(
@@ -323,7 +347,7 @@ export class Game {
       const pts = new THREE.QuadraticBezierCurve3(s, mid, e).getPoints(80);
       const geo = new THREE.BufferGeometry().setFromPoints(pts);
       geo.setAttribute("aT", new THREE.BufferAttribute(new Float32Array(pts.map((_, k) => k / (pts.length - 1))), 1));
-      const color = a === 0 ? C.amber : i % 2 ? C.sky : C.sage;
+      const color = isHome(a) ? C.amber : i % 2 ? C.sky : C.sage;
       const mat = arcMaterial(color);
       this.spin.add(new THREE.Line(geo, mat));
       this.arcs.push({ mat, a, b, speed: 0.15 + (i % 5) * 0.035, offset: (i * 0.137) % 1, color });
@@ -882,12 +906,12 @@ export class Game {
     }
 
     this.hubs.forEach((h, i) => {
-      const base = !h.online ? C.red : i === 0 ? C.amber : C.sage;
+      const base = !h.online ? C.red : isHome(i) ? C.amber : C.sage;
       h.flash *= Math.pow(0.02, dt);
       const coreMat = h.core.material;
       coreMat.color.copy(base).lerp(C.white, h.flash * 0.8);
       coreMat.opacity = h.online ? 1 : 0.45 + 0.35 * Math.sin(t * 3 + i);
-      h.core.scale.setScalar((i === 0 ? 0.3 : 0.22) * (1 + h.flash * 0.8));
+      h.core.scale.setScalar((isHome(i) ? 0.3 : 0.22) * (1 + h.flash * 0.8));
 
       const f = (t * (h.online ? 0.5 : 0.25) + i * 0.19) % 1;
       h.ring.scale.setScalar(1 + f * 3.2);

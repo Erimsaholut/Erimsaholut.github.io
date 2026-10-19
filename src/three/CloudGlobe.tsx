@@ -15,7 +15,8 @@ const SAGE = "#93D3A2";
 const SKY = "#8FB0EC";
 const INK = "#ECE8DF";
 
-// Approximate coordinates of major cloud data-center cities. Index 0 = Torino (home).
+// Approximate coordinates of major cloud data-center cities, plus my two study cities
+// (index 0 = Torino, index 11 = Manisa), which are highlighted.
 const HUBS = [
   [45.07, 7.69], // Torino
   [50.11, 8.68], // Frankfurt
@@ -28,10 +29,13 @@ const HUBS = [
   [1.35, 103.82], // Singapore
   [35.68, 139.69], // Tokyo
   [-33.87, 151.21], // Sydney
+  [38.62, 27.43], // Manisa
 ];
 
+const isHome = (i: number) => i === 0 || i === 11;
+
 const ARCS: [number, number][] = [
-  [0, 1], [0, 2], [0, 3], [0, 4], [0, 7], [0, 8], [0, 9], [0, 6],
+  [0, 1], [0, 2], [0, 3], [0, 4], [0, 7], [0, 8], [0, 9], [0, 6], [0, 11], [11, 7], [11, 1],
   [4, 5], [4, 6], [2, 4], [8, 9], [8, 10], [7, 8], [1, 3], [5, 9],
 ];
 
@@ -192,9 +196,9 @@ export default function CloudGlobe({ dots, reduce, fill = false }: { dots: numbe
     const hubGeo = new THREE.BufferGeometry().setFromPoints(hubs.map((v) => v.clone().multiplyScalar(1.004)));
     hubGeo.setAttribute(
       "aColor",
-      new THREE.BufferAttribute(new Float32Array(hubs.flatMap((_, i) => new THREE.Color(i === 0 ? AMBER : i % 2 ? SAGE : INK).toArray())), 3)
+      new THREE.BufferAttribute(new Float32Array(hubs.flatMap((_, i) => new THREE.Color(isHome(i) ? AMBER : i % 2 ? SAGE : INK).toArray())), 3)
     );
-    hubGeo.setAttribute("aSize", new THREE.BufferAttribute(new Float32Array(hubs.map((_, i) => (i === 0 ? 34 : 18))), 1));
+    hubGeo.setAttribute("aSize", new THREE.BufferAttribute(new Float32Array(hubs.map((_, i) => (isHome(i) ? 34 : 18))), 1));
     const hubMat = glowMaterial();
 
     const arcs = ARCS.map(([a, b], i) => {
@@ -206,7 +210,7 @@ export default function CloudGlobe({ dots, reduce, fill = false }: { dots: numbe
       const pts = curve.getPoints(90);
       const geo = new THREE.BufferGeometry().setFromPoints(pts);
       geo.setAttribute("aT", new THREE.BufferAttribute(new Float32Array(pts.map((_, k) => k / (pts.length - 1))), 1));
-      const color = new THREE.Color(a === 0 ? AMBER : i % 2 ? SKY : SAGE);
+      const color = new THREE.Color(isHome(a) ? AMBER : i % 2 ? SKY : SAGE);
       const mat = new THREE.ShaderMaterial({
         uniforms: { uHead: { value: 0 }, uOpacity: { value: 0 }, uColor: { value: color } },
         vertexShader: arcVert,
@@ -227,7 +231,7 @@ export default function CloudGlobe({ dots, reduce, fill = false }: { dots: numbe
     const ringMats = hubs.map(
       (_, i) =>
         new THREE.MeshBasicMaterial({
-          color: i === 0 ? AMBER : SAGE,
+          color: isHome(i) ? AMBER : SAGE,
           transparent: true,
           opacity: 0,
           side: THREE.DoubleSide,
@@ -317,7 +321,7 @@ export default function CloudGlobe({ dots, reduce, fill = false }: { dots: numbe
     rings.current.forEach((mesh, i) => {
       if (!mesh) return;
       const f = (t * 0.45 + i * 0.19) % 1;
-      mesh.scale.setScalar(1 + f * (i === 0 ? 5 : 3));
+      mesh.scale.setScalar(1 + f * (isHome(i) ? 5 : 3));
       (mesh.material as THREE.MeshBasicMaterial).opacity = (1 - f) * 0.7 * o;
     });
 
