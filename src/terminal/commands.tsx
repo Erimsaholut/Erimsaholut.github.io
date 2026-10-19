@@ -3,6 +3,7 @@ import { CERTS, EDUCATION, FEATURED_CERT, LANGUAGES, PROFILE, PROJECTS, SKILLS }
 import { SECRETS } from "../secrets/registry";
 import { isFound, unlock } from "../secrets/store";
 import { taintSpeedrun } from "../secrets/speedrun";
+import { runChaos } from "../secrets/chaos";
 
 /* Commands for the hidden terminal. Output is plain React nodes. */
 
@@ -381,6 +382,31 @@ export const COMMANDS: Record<string, Command> = {
     desc: "",
     hidden: true,
     run: (_a, { print }) => print(<M key="v">Relax, you're not stuck. (Hint for real vim: :q!)</M>),
+  },
+  akhisar: {
+    desc: "",
+    hidden: true,
+    run: async (_a, { print }) => {
+      print(<M key="a1">Checking the transmission…</M>);
+      await sleep(600);
+      const first = unlock("signal");
+      print(
+        <S key="a2">📡 Signal decoded: AKHISAR</S>,
+        <span key="a3">{first ? "Message received loud and clear — Akhisar, Manisa." : "You already cracked this one. 🙂"}</span>
+      );
+    },
+  },
+  chaos: {
+    desc: "",
+    hidden: true,
+    run: async (_a, { print, close }) => {
+      print(<span key="c1" className="text-[#FF5A4F]">⚠ Starting a chaos experiment in eu-south-1 (Milan)…</span>);
+      await sleep(650);
+      print(<M key="c2">Closing the terminal — keep your eyes on the page.</M>);
+      await sleep(700);
+      close();
+      setTimeout(() => void runChaos(), 420);
+    },
   },
   hello: {
     desc: "",

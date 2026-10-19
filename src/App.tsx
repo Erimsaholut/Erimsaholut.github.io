@@ -16,6 +16,7 @@ import { hasWebGL, isLiteDevice } from "./three/input";
 import { SecretToasts, SecretsPanel } from "./secrets/SecretsUI";
 import { unlock } from "./secrets/store";
 import { useSpeedrun } from "./secrets/speedrun";
+import { useShakeForChaos } from "./secrets/chaos";
 
 const BackgroundScene = lazy(() => import("./three/BackgroundScene"));
 // Easter eggs: each is downloaded only when it's triggered.
@@ -27,6 +28,7 @@ export default function App() {
   const webgl = useMemo(() => hasWebGL(), []);
   const lite = useMemo(() => isLiteDevice(), []);
   useSpeedrun();
+  useShakeForChaos(lite);
   const [game, setGame] = useState(false);
   const [terminal, setTerminal] = useState(false);
   const [secrets, setSecrets] = useState(false);

@@ -74,10 +74,10 @@ export default function Nav({ onLogoSecret }: { onLogoSecret?: () => void }) {
         </nav>
 
         <a
-          href={`mailto:${PROFILE.email}`}
+          href="#contact"
           className="hidden lg:inline-flex items-center rounded-md bg-amber px-4 py-2 text-sm font-medium text-bg hover:bg-amber/90 transition-colors"
         >
-          Say hello
+          Hire me
         </a>
 
         <button
@@ -110,6 +110,13 @@ export default function Nav({ onLogoSecret }: { onLogoSecret?: () => void }) {
                   {l.label}
                 </a>
               ))}
+              <a
+                href="#contact"
+                onClick={() => setOpen(false)}
+                className="mt-4 inline-flex items-center justify-center rounded-md bg-amber px-5 py-3 text-base font-semibold text-bg transition-colors hover:bg-amber/90"
+              >
+                Hire me
+              </a>
             </div>
           </motion.nav>
         )}

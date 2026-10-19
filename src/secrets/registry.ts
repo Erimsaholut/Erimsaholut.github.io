@@ -62,4 +62,22 @@ export const SECRETS: SecretDef[] = [
     hint: "Get from the top of the page to the very bottom — fast.",
     found: "Scrolled the whole page in a few seconds.",
   },
+  {
+    id: "chaos",
+    title: "Chaos engineer",
+    hint: "Break the site on purpose: shake your phone, or ask the terminal for some chaos.",
+    found: "Broke the page on purpose and watched it heal itself.",
+  },
+  {
+    id: "invisible-ink",
+    title: "Invisible ink",
+    hint: "Some words here are written in invisible ink. Highlight them to read.",
+    found: "Found the hidden message by selecting it.",
+  },
+  {
+    id: "signal",
+    title: "Signal",
+    hint: "A light in the footer keeps blinking a word. Decode it, then tell the terminal.",
+    found: "Decoded the Morse signal in the footer.",
+  },
 ];

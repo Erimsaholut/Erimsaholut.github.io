@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Section, { Reveal } from "./Section";
 import { ArrowUpRight, Check, Code, Copy, Mail, Person, Pin } from "./Icons";
 import { PROFILE } from "../data";
+import { isFound, unlock } from "../secrets/store";
 
 export default function Contact() {
   const [copied, setCopied] = useState(false);
@@ -15,6 +16,28 @@ export default function Contact() {
       window.location.href = `mailto:${PROFILE.email}`;
     }
   };
+
+  // Invisible ink: a line written in the background colour. Selecting a few of its characters reveals it.
+  const ink = useRef<HTMLParagraphElement>(null);
+  useEffect(() => {
+    const onSelect = () => {
+      const sel = document.getSelection();
+      if (!sel || sel.isCollapsed || !ink.current || isFound("invisible-ink")) return;
+      for (let i = 0; i < sel.rangeCount; i++) {
+        const r = sel.getRangeAt(i);
+        const x = document.createRange();
+        x.selectNodeContents(ink.current);
+        if (r.compareBoundaryPoints(Range.START_TO_START, x) > 0) x.setStart(r.startContainer, r.startOffset);
+        if (r.compareBoundaryPoints(Range.END_TO_END, x) < 0) x.setEnd(r.endContainer, r.endOffset);
+        if (x.toString().trim().length >= 4) {
+          unlock("invisible-ink");
+          return;
+        }
+      }
+    };
+    document.addEventListener("selectionchange", onSelect);
+    return () => document.removeEventListener("selectionchange", onSelect);
+  }, []);
 
   const links = [
     { label: "GitHub", sub: PROFILE.github.label, href: PROFILE.github.url, icon: Code },
@@ -77,6 +100,9 @@ export default function Contact() {
           </div>
         </div>
       </Reveal>
+      <p ref={ink} aria-hidden className="mt-6 text-right font-mono text-xs tracking-wide text-transparent">
+        psst — the little light in the footer speaks Morse. Decode it, then tell the terminal.
+      </p>
     </Section>
   );
 }
