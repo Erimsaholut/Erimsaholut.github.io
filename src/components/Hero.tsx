@@ -1,4 +1,4 @@
-import { lazy, Suspense, useMemo } from "react";
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import SafeBoundary from "../three/SafeBoundary";
 import { hasWebGL, isLiteDevice } from "../three/input";
@@ -9,14 +9,35 @@ import { FOCUS_WORDS, PROFILE, STATS } from "../data";
 
 const HeroGlobe = lazy(() => import("../three/HeroGlobe"));
 
+// The last letter of the name is the easter-egg switch: each tap shifts its colour, the third opens the game.
+const SECRET_COLORS = ["#FFB547", "#93D3A2", "#8FB0EC", "#ECE8DF"];
+
 const up = (delay: number) => ({
   initial: { opacity: 0, y: 22 },
   animate: { opacity: 1, y: 0 },
   transition: { duration: 0.8, delay, ease: EASE },
 });
 
-export default function Hero() {
+export default function Hero({ onSecret }: { onSecret: () => void }) {
   const words = PROFILE.name.split(" ");
+  const [taps, setTaps] = useState(0);
+  const resetTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  useEffect(() => () => clearTimeout(resetTimer.current), []);
+
+  const onSecretTap = () => {
+    const n = taps + 1;
+    clearTimeout(resetTimer.current);
+    if (n === 2) void import("../game/RegionDefender"); // start fetching the game early
+    setTaps(n);
+    if (n >= 3) {
+      resetTimer.current = setTimeout(() => {
+        setTaps(0);
+        onSecret();
+      }, 220);
+      return;
+    }
+    resetTimer.current = setTimeout(() => setTaps(0), 4000);
+  };
   const reduce = !!useReducedMotion();
   const localGlobe = useMemo(() => isLiteDevice() && hasWebGL(), []);
 
@@ -50,18 +71,40 @@ export default function Hero() {
                 aria-hidden
                 className={`block pb-2 ${wi === 1 ? "text-amber [text-shadow:0_0_48px_rgba(255,181,71,0.35)]" : ""}`}
               >
-                {[...word].map((ch, ci) => (
-                  <motion.span
-                    key={ci}
-                    className="inline-block origin-bottom cursor-default"
-                    initial={{ opacity: 0, y: "55%", rotateX: -85 }}
-                    animate={{ opacity: 1, y: 0, rotateX: 0 }}
-                    transition={{ duration: 0.9, delay: 0.15 + wi * 0.28 + ci * 0.045, ease: EASE }}
-                    whileHover={{ y: -12, color: wi === 1 ? "#ECE8DF" : "#FFB547", transition: { duration: 0.18 } }}
-                  >
-                    {ch}
-                  </motion.span>
-                ))}
+                {[...word].map((ch, ci) => {
+                  const delay = 0.15 + wi * 0.28 + ci * 0.045;
+                  const secret = wi === words.length - 1 && ci === word.length - 1;
+                  if (secret) {
+                    return (
+                      <motion.span
+                        key={ci}
+                        onClick={onSecretTap}
+                        onMouseDown={(e) => e.detail > 1 && e.preventDefault()}
+                        className="inline-block origin-bottom cursor-default select-none [-webkit-tap-highlight-color:transparent]"
+                        initial={{ opacity: 0, y: "55%", rotateX: -85, color: SECRET_COLORS[0] }}
+                        animate={{ opacity: 1, y: 0, rotateX: 0, color: SECRET_COLORS[taps] }}
+                        transition={{ default: { duration: 0.9, delay, ease: EASE }, color: { duration: 0.25 } }}
+                        whileHover={{ y: -12, transition: { duration: 0.18 } }}
+                      >
+                        <span key={taps} className={`inline-block ${taps ? "animate-pop" : ""}`}>
+                          {ch}
+                        </span>
+                      </motion.span>
+                    );
+                  }
+                  return (
+                    <motion.span
+                      key={ci}
+                      className="inline-block origin-bottom cursor-default"
+                      initial={{ opacity: 0, y: "55%", rotateX: -85 }}
+                      animate={{ opacity: 1, y: 0, rotateX: 0 }}
+                      transition={{ duration: 0.9, delay, ease: EASE }}
+                      whileHover={{ y: -12, color: wi === 1 ? "#ECE8DF" : "#FFB547", transition: { duration: 0.18 } }}
+                    >
+                      {ch}
+                    </motion.span>
+                  );
+                })}
               </span>
             ))}
           </h1>

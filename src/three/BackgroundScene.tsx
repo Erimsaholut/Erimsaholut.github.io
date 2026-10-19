@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { Canvas, useThree } from "@react-three/fiber";
 import DataDust from "./DataDust";
 import CloudGlobe from "./CloudGlobe";
+import { useGameOpen } from "./gameOverlay";
 
 function RedrawOnScroll() {
   const invalidate = useThree((s) => s.invalidate);
@@ -19,13 +20,14 @@ function RedrawOnScroll() {
 
 /** Desktop only: one fixed, full-screen WebGL layer behind the page — particles + the hero globe. */
 export default function BackgroundScene({ reduce }: { reduce: boolean }) {
+  const paused = useGameOpen();
   return (
     <div className="pointer-events-none fixed inset-0 z-0" aria-hidden>
       <Canvas
         dpr={[1, 1.75]}
         camera={{ position: [0, 0, 8], fov: 45 }}
         gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
-        frameloop={reduce ? "demand" : "always"}
+        frameloop={paused ? "never" : reduce ? "demand" : "always"}
       >
         {reduce && <RedrawOnScroll />}
         <DataDust count={1500} reduce={reduce} />

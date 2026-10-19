@@ -1,4 +1,5 @@
-import { lazy, Suspense, useMemo } from "react";
+import { lazy, Suspense, useCallback, useMemo, useState } from "react";
+import GameBoot from "./components/GameBoot";
 import { MotionConfig, useReducedMotion } from "framer-motion";
 import Nav from "./components/Nav";
 import Hero from "./components/Hero";
@@ -14,11 +15,15 @@ import SafeBoundary from "./three/SafeBoundary";
 import { hasWebGL, isLiteDevice } from "./three/input";
 
 const BackgroundScene = lazy(() => import("./three/BackgroundScene"));
+// Easter-egg game: downloaded only after the secret is triggered.
+const RegionDefender = lazy(() => import("./game/RegionDefender"));
 
 export default function App() {
   const reduce = !!useReducedMotion();
   const webgl = useMemo(() => hasWebGL(), []);
   const lite = useMemo(() => isLiteDevice(), []);
+  const [game, setGame] = useState(false);
+  const closeGame = useCallback(() => setGame(false), []);
 
   return (
     <MotionConfig reducedMotion="user">
@@ -34,7 +39,7 @@ export default function App() {
       <Nav />
       <div className="relative z-10">
         <main>
-          <Hero />
+          <Hero onSecret={() => setGame(true)} />
           <About />
           <Projects />
           <Skills />
@@ -44,6 +49,13 @@ export default function App() {
         </main>
         <Footer />
       </div>
+      {game && (
+        <SafeBoundary fallback={null}>
+          <Suspense fallback={<GameBoot />}>
+            <RegionDefender onClose={closeGame} lite={lite} />
+          </Suspense>
+        </SafeBoundary>
+      )}
     </MotionConfig>
   );
 }

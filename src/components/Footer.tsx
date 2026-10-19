@@ -9,6 +9,7 @@ export default function Footer() {
           <Logo className="w-6 h-6" />
           <span className="text-faint">© {new Date().getFullYear()} {PROFILE.name}</span>
         </div>
+        <p className="font-mono text-[11px] text-faint/80">psst — the last letter of my name hides something. Tap it three times.</p>
         <a href="#top" className="hover:text-ink transition-colors">Back to top ↑</a>
       </div>
     </footer>

@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useOnScreen } from "./useOnScreen";
+import { useGameOpen } from "./gameOverlay";
 import { isLiteDevice } from "./input";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
@@ -166,7 +167,8 @@ function Coin({ face, reduce }: { face: THREE.Texture; reduce: boolean }) {
 export default function CertCoin({ reduce }: { reduce: boolean }) {
   const [face, setFace] = useState<THREE.Texture | null>(null);
   const box = useRef<HTMLDivElement>(null);
-  const onScreen = useOnScreen(box);
+  const gameOpen = useGameOpen();
+  const onScreen = useOnScreen(box) && !gameOpen;
   const lite = useMemo(() => isLiteDevice(), []);
 
   useEffect(() => {
