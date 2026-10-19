@@ -64,7 +64,7 @@ export const ITEMS: Record<string, string> = {
   keycard: "💳 Master keycard",
   fuse: "🔌 Generator fuse",
 };
-export const COMPANIONS: Record<string, string> = { murat: "Murat", deniz: "Deniz", cat: "Byte 🐈" };
+export const COMPANIONS: Record<string, string> = { mete: "Mete", eren: "Eren", cat: "Byte 🐈" };
 
 export const has = (s: State, item: string) => s.items.includes(item);
 export const is = (s: State, flag: string) => s.flags.includes(flag);
@@ -86,12 +86,12 @@ You're the on-call engineer tonight, babysitting a firmware update for 40 drink 
 
 Outside, a car alarm starts. Then stops. Mid-beep.
 
-Murat, the night guard, radioed in twenty minutes ago. He hasn't since.
+Mete, the night guard, radioed in twenty minutes ago. Nothing since.
 
 Your phone buzzes: “EMERGENCY ALERT — Stay indoors. Do NOT approach anyone who is acting—” The message cuts off. The lights flicker once, twice… and the warehouse drops into red emergency lighting.`,
     choices: [
       { label: "Check the security cameras", to: "cams" },
-      { label: "Radio Murat", to: "radio" },
+      { label: "Radio Mete", to: "radio" },
       { label: "Put your headphones on. The update needs you.", to: "headphones" },
     ],
   },
@@ -109,22 +109,22 @@ A cold hand lands on your shoulder.`,
   },
 
   coffee: {
-    text: () => `Hot americano, straight in the face. It screeches and staggers back, clawing at its eyes. In the red light you catch a glimpse of a Buzlime delivery uniform. Name tag: “KEREM — Here to help!”
+    text: () => `Hot americano, straight in the face. It screeches and staggers back, clawing at its eyes. In the red light you catch a glimpse of a Buzlime delivery uniform. Name tag: “FURKAN — Here to help!”
 
-Not tonight, Kerem.
+Not tonight, Furkan.
 
 Something scratches your arm as you squeeze past. Not a bite. Probably.`,
     choices: [{ label: "Run into the hallway", to: "hall" }],
   },
 
   radio: {
-    text: () => `Static. Then Murat, whispering:
+    text: () => `Static. Then Mete, whispering:
 
 “Don't come out. They're… they're not people anymore. They go for light and noise. I'm hiding in the guard booth at the gate. If the power dies for good, the doors unlock and—”
 
 A thud. Static. Then, very faintly: “…the generator… needs a fuse…”`,
     choices: [
-      { label: "“Hold on, Murat. I'm coming.”", to: "hall", run: (s) => set(s, "promised") },
+      { label: "“Hold on, Mete. I'm coming.”", to: "hall", run: (s) => set(s, "promised") },
       { label: "Check the cameras first", to: "cams" },
     ],
   },
@@ -132,14 +132,14 @@ A thud. Static. Then, very faintly: “…the generator… needs a fuse…”`,
   cams: {
     text: (s) => `The monitor wall flickers to life.
 
-FRONT GATE — Murat's flashlight lies in the road, still on. Three figures sway around the guard booth, moving like a video that keeps buffering.
+FRONT GATE — Mete's flashlight lies in the road, still on. Three figures sway around the guard booth, moving like a video that keeps buffering.
 
-LOADING DOCK — The delivery van's back door is open. Someone is on the van's roof, waving a pallet jack handle at the camera. Deniz, the courier from the late restock.
+LOADING DOCK — The delivery van's back door is open. Someone is on the van's roof, waving a pallet jack handle at the camera. Eren, the courier from the late restock.
 
 WORKSHOP — Something small and orange sits on top of a kiosk, staring straight into the lens. Byte, the warehouse cat. Unbothered.
 
 COLD ROOM — Empty. −2 °C. The compressor is running on battery: 19%.${
-      replay(s) && !is(s, "zeroClue") ? "\n\nOn the shelf below the monitors sits a tape you've never noticed before. The label is in Kerem's handwriting: “LOADING DOCK 01:12 — DON'T WATCH”." : ""
+      replay(s) && !is(s, "zeroClue") ? "\n\nOn the shelf below the monitors sits a tape you've never noticed before. The label is in Furkan's handwriting: “LOADING DOCK 01:12 — DON'T WATCH”." : ""
     }`,
     choices: [
       { label: "Rewind the loading dock tape to 01:12", to: "tape", when: (s) => replay(s) && !is(s, "zeroClue"), run: (s) => set(s, "zeroClue") },
@@ -148,13 +148,13 @@ COLD ROOM — Empty. −2 °C. The compressor is running on battery: 19%.${
   },
 
   tape: {
-    text: () => `01:12 — LOADING DOCK. Kerem from deliveries unloads the late restock, yawning so hard his jaw clicks.
+    text: () => `01:12 — LOADING DOCK. Furkan from deliveries unloads the late restock, yawning every ten seconds.
 
 One crate is different: matte black, stamped BUZLIME ZERO — PROTOTYPE — DO NOT DRINK.
 
-Kerem looks left. Looks right. Drinks one. Then another. Then four more.
+Furkan looks left. Looks right. Drinks one. Then another. Then four more.
 
-At 01:19 he stops moving. At 01:23 he starts again — wrong, like a video that keeps buffering. He shuffles off toward the street, and the crate gets wheeled into the cold room.
+At 01:19 Furkan stops moving. At 01:23 Furkan starts again — wrong, like a video that keeps buffering — and shuffles off toward the street. The crate gets wheeled into the cold room.
 
 So that's where it started.`,
     choices: [{ label: "Head out into the hallway", to: "hall" }],
@@ -169,9 +169,9 @@ So that's where it started.`,
 Doors lead to the workshop, the cold room, the loading dock and the server room. At the far end, the glass entrance looks out on the front gate.`,
       ];
       if (!is(s, "wall")) out.push("On the wall: an emergency flashlight and a fire extinguisher, both very much within reach.");
-      if (is(s, "murat") && is(s, "deniz")) out.push("Murat and Deniz are right behind you, arguing in whispers about whether zombies can swim.");
-      else if (is(s, "murat")) out.push("Murat follows you, jumping at every shadow.");
-      else if (is(s, "deniz")) out.push("Deniz follows you, pallet jack handle at the ready.");
+      if (is(s, "mete") && is(s, "eren")) out.push("Mete and Eren are right behind you, arguing in whispers about whether zombies can swim.");
+      else if (is(s, "mete")) out.push("Mete follows you, jumping at every shadow.");
+      else if (is(s, "eren")) out.push("Eren follows you, pallet jack handle at the ready.");
       if (is(s, "cat")) out.push("Byte rides on your shoulder, purring like a small engine.");
       return out.join("\n\n");
     },
@@ -183,7 +183,7 @@ Doors lead to the workshop, the cold room, the loading dock and the server room.
         run: (s) => (give(s, "flashlight"), give(s, "extinguisher"), set(s, "wall")),
         say: "You take both. You feel about 40% braver.",
       },
-      { label: "Go to the front gate", to: "gate", when: (s) => !is(s, "murat") && !is(s, "muratLost") },
+      { label: "Go to the front gate", to: "gate", when: (s) => !is(s, "mete") && !is(s, "meteLost") },
       { label: "Go to the loading dock", to: "dock" },
       { label: "Go to the workshop", to: "workshop" },
       { label: "Go to the cold room", to: "coldroom" },
@@ -192,7 +192,7 @@ Doors lead to the workshop, the cold room, the loading dock and the server room.
   },
 
   gate: {
-    text: () => `Cold night air. The front gate stands wide open and the guard booth's window is cracked. Inside, you can see Murat's boots. They're shaking.
+    text: () => `Cold night air. The front gate stands wide open and the guard booth's window is cracked. Inside, you can see Mete's boots. They're shaking.
 
 Between you and the booth: three of them. Swaying. Faces turned up to the blinking orange gate light, as if they're listening to a song only they can hear.`,
     choices: [
@@ -201,16 +201,16 @@ Between you and the booth: three of them. Swaying. Faces turned up to the blinki
         to: "gate_decoy",
         need: (s) => has(s, "flashlight"),
         why: "You'd need a light to throw",
-        run: (s) => (take(s, "flashlight"), give(s, "keycard"), set(s, "murat")),
+        run: (s) => (take(s, "flashlight"), give(s, "keycard"), set(s, "mete")),
       },
       {
         label: "Charge in with the fire extinguisher",
         to: "gate_charge",
         need: (s) => has(s, "extinguisher"),
         why: "You'd need something to fight with",
-        run: (s) => (hurt(s), take(s, "extinguisher"), give(s, "keycard"), set(s, "murat")),
+        run: (s) => (hurt(s), take(s, "extinguisher"), give(s, "keycard"), set(s, "mete")),
       },
-      { label: "Yell to draw them away from the booth", to: "gate_shout", run: (s) => (hurt(s), set(s, "muratLost")) },
+      { label: "Yell to draw them away from the booth", to: "gate_shout", run: (s) => (hurt(s), set(s, "meteLost")) },
       { label: "Back inside. This is a terrible idea.", to: "hall" },
     ],
   },
@@ -218,27 +218,27 @@ Between you and the booth: three of them. Swaying. Faces turned up to the blinki
   gate_decoy: {
     text: (s) => `The flashlight spins through the air and lands in the parking lot, beam pointing at the sky. All three heads turn. Slowly, like moths, they shuffle toward the light.
 
-Murat bursts out of the booth and grabs you in a bear hug. “${is(s, "promised") ? "You said you'd come and you actually came!" : "You came! Nobody ever comes!"}”
+Mete bursts out of the booth and grabs you in a bear hug. “${is(s, "promised") ? "You said you'd come and you actually came!" : "You came! Nobody ever comes!"}”
 
-He presses a plastic card into your hand. “Master keycard. Server room. You'll need it.”`,
+Mete presses a plastic card into your hand. “Master keycard. Server room. You'll need it.”`,
     choices: [{ label: "Back inside — together", to: "hall" }],
   },
 
   gate_charge: {
-    text: () => `You pull the pin and charge, screaming. A white cloud swallows the gate. Coughing, chaos, flailing arms — and somewhere in the fog, a hand finds yours. It's Murat's. Probably.
+    text: () => `You pull the pin and charge, screaming. A white cloud swallows the gate. Coughing, chaos, flailing arms — and somewhere in the fog, a hand finds yours. It's Mete's. Probably.
 
 Something catches your ankle on the way out. You kick free and leave a shoe behind. Worth it.
 
-At the door, Murat presses a plastic card into your hand. “Master keycard. Server room. Don't lose it. Or your other shoe.”`,
+At the door, Mete presses a plastic card into your hand. “Master keycard. Server room. Don't lose it. Or your other shoe.”`,
     choices: [{ label: "Back inside — together", to: "hall" }],
   },
 
   gate_shout: {
     text: () => `“HEY! OVER HERE!”
 
-All three heads snap toward you at once. Murat's plan was quiet. Yours was not.
+All three heads snap toward you at once. Mete's plan was quiet. Yours was not.
 
-You sprint back and slam the glass door just as they hit it — but one of them gets a hand on your sleeve first, and you feel nails through the fabric. Through the glass, you watch Murat slip out of the booth and run off into the night.
+You sprint back and slam the glass door just as they hit it — but one of them gets a hand on your sleeve first, and you feel nails through the fabric. Through the glass, you watch Mete slip out of the booth and run off into the night.
 
 With the keycard.`,
     choices: [{ label: "Back to the hallway", to: "hall" }],
@@ -246,23 +246,23 @@ With the keycard.`,
 
   dock: {
     text: (s) =>
-      is(s, "deniz")
+      is(s, "eren")
         ? `The loading dock is quiet now, apart from a few lemonade bottles rolling gently across the concrete.
 
 The van's spare keys still hang on the hook by the door.`
-        : `The loading dock smells like diesel and lime syrup. The delivery van's back door hangs open, and on its roof stands Deniz, holding a pallet jack handle like a sword.
+        : `The loading dock smells like diesel and lime syrup. The delivery van's back door hangs open, and on its roof stands Eren, holding a pallet jack handle like a sword.
 
 Around the van: four of them. Circling.
 
-“HEY! ENGINEER!” Deniz shouts. “A little help?!”
+“HEY! ENGINEER!” Eren shouts. “A little help?!”
 
 Next to you: a stack of lemonade crates fresh from the cold room, a forklift with the key still in it, and the van's spare keys on a hook by the door.`,
     choices: [
-      { label: "Roll ice-cold lemonade bottles across the floor", to: "dock_bottles", when: (s) => !is(s, "deniz"), run: (s) => (set(s, "deniz"), set(s, "knowsCold")) },
-      { label: "Jump on the forklift and drive straight at them", to: "dock_forklift", when: (s) => !is(s, "deniz"), run: (s) => (hurt(s), set(s, "deniz")) },
+      { label: "Roll ice-cold lemonade bottles across the floor", to: "dock_bottles", when: (s) => !is(s, "eren"), run: (s) => (set(s, "eren"), set(s, "knowsCold")) },
+      { label: "Jump on the forklift and drive straight at them", to: "dock_forklift", when: (s) => !is(s, "eren"), run: (s) => (hurt(s), set(s, "eren")) },
       { label: "Grab the van keys. You're out of here.", to: "end_lone" },
-      { label: "Back away slowly", to: "hall", when: (s) => !is(s, "deniz"), say: "“TRAITOR!” Deniz yells after you. Fair." },
-      { label: "Back to the hallway", to: "hall", when: (s) => is(s, "deniz") },
+      { label: "Back away slowly", to: "hall", when: (s) => !is(s, "eren"), say: "“TRAITOR!” Eren yells after you. Fair." },
+      { label: "Back to the hallway", to: "hall", when: (s) => is(s, "eren") },
     ],
   },
 
@@ -273,17 +273,17 @@ The zombies stop and watch the bottles roll. They pick them up, very slowly, as 
 
 Interesting. They really don't like the cold.
 
-Deniz slides down the windshield and runs over. “You saved me with LEMONADE?” A beat. “…Respect.”`,
-    choices: [{ label: "Back to the hallway with Deniz", to: "hall" }],
+Eren slides down the windshield and runs over. “You saved me with LEMONADE?” A beat. “…Respect.”`,
+    choices: [{ label: "Back to the hallway with Eren", to: "hall" }],
   },
 
   dock_forklift: {
     text: () => `You have never driven a forklift. This becomes obvious immediately.
 
-You hit a shelf, a pallet of paper cups, two zombies and — briefly — the van. Cups rain down like confetti. In the chaos, Deniz jumps from the roof onto the forklift's cage, and something claws your arm on the way out.
+You hit a shelf, a pallet of paper cups, two zombies and — briefly — the van. Cups rain down like confetti. In the chaos, Eren jumps from the roof onto the forklift's cage, and something claws your arm on the way out.
 
-“Ten out of ten,” Deniz pants. “Never drive again.”`,
-    choices: [{ label: "Back to the hallway with Deniz", to: "hall" }],
+“Ten out of ten,” Eren pants. “Never drive again.”`,
+    choices: [{ label: "Back to the hallway with Eren", to: "hall" }],
   },
 
   workshop: {
@@ -360,7 +360,7 @@ They're not undead. They're un-slept.`,
   server: {
     text: (s) => {
       const out = [`The server room door. A keycard reader glows red. You try the handle: locked. You try asking nicely: still locked.`];
-      if (!has(s, "keycard")) out.push(is(s, "muratLost") ? "The master keycard ran off into the night with Murat." : "Murat has the master keycard.");
+      if (!has(s, "keycard")) out.push(is(s, "meteLost") ? "The master keycard ran off into the night with Mete." : "Mete has the master keycard.");
       if (!has(s, "keycard") && is(s, "cat"))
         out.push("Byte hops off your shoulder onto a shelf and paws at a loose ceiling vent, then looks back at you, as if this should have been obvious.");
       return out.join("\n\n");
@@ -386,7 +386,7 @@ Your laptop still shows the update: 63%. To finish, it needs the uplink. The upl
   siege: {
     mins: 10,
     text: (s) => {
-      const team = is(s, "murat") && is(s, "deniz");
+      const team = is(s, "mete") && is(s, "eren");
       const out = [
         `You slam the fuse home and pull the cord. The generator coughs, sputters… and ROARS.
 
@@ -398,8 +398,8 @@ Within minutes there are faces at every window and hands on every door. The glas
 
 Your laptop chimes: UPLINK AVAILABLE — fleet update ready to resume at 63%. But the antenna on the roof has been knocked out of alignment, and somebody has to hold the door while the update runs.`,
       ];
-      if (team) out.push(`Murat grabs a fire extinguisher. Deniz is already halfway up the ladder to the roof. “Do your nerd thing,” Deniz says. “We've got you.”`);
-      else if (is(s, "murat") || is(s, "deniz")) out.push("You're one person short. Somebody holds the door, somebody fixes the antenna — and you can't be in two places at once.");
+      if (team) out.push(`Mete grabs a fire extinguisher. Eren is already halfway up the ladder to the roof. “Do your nerd thing,” Eren says. “We've got you.”`);
+      else if (is(s, "mete") || is(s, "eren")) out.push("You're one person short. Somebody holds the door, somebody fixes the antenna — and you can't be in two places at once.");
       else out.push(`You're alone. Completely alone.${is(s, "cat") ? " Byte doesn't count, no matter what Byte thinks." : ""}`);
       return out.join("\n\n");
     },
@@ -407,7 +407,7 @@ Your laptop chimes: UPLINK AVAILABLE — fleet update ready to resume at 63%. Bu
       {
         label: "Resume the update — push it to the whole fleet",
         to: "end_best",
-        need: (s) => is(s, "murat") && is(s, "deniz"),
+        need: (s) => is(s, "mete") && is(s, "eren"),
         why: "You can't hold the door and fix the antenna alone",
       },
       {
@@ -427,7 +427,7 @@ Your laptop chimes: UPLINK AVAILABLE — fleet update ready to resume at 63%. Bu
   end_best: {
     ending: "best",
     mins: 214,
-    text: () => `Murat holds the door with a fire extinguisher and a surprising number of opinions. Deniz climbs onto the roof in the rain and twists the antenna until your laptop shows five bars.
+    text: () => `Mete holds the door with a fire extinguisher and a surprising number of opinions. Eren climbs onto the roof in the rain and twists the antenna until your laptop shows five bars.
 
 You type:  deploy --fleet all --mode beacon
 
@@ -447,12 +447,12 @@ At 08:00 your phone rings. It's the CEO. “I hear you deployed to production at
     mins: 240,
     text: (s) => `You grab a kiosk off the wall, crank its demo to full volume and run, the jingle blaring: “WELCOME! HOŞ GELDİNİZ! BENVENUTI!”
 
-Every zombie in the building follows you — down the hallway, past the shelves, straight into the cold room. You dive out at the last second${is(s, "murat") || is(s, "deniz") ? " and your friends slam the heavy door behind you" : " and kick the heavy door shut"}. Click.
+Every zombie in the building follows you — down the hallway, past the shelves, straight into the cold room. You dive out at the last second${is(s, "mete") || is(s, "eren") ? " and your friends slam the heavy door behind you" : " and kick the heavy door shut"}. Click.
 
 Silence. Frost creeps slowly over the little window.
 
 At 07:00 you dare to look inside. The zombies are… shivering. Blinking. Looking around, confused. One of them waves. ${
-      is(s, "coffee") ? "It's Kerem from deliveries. “Why is it so cold in here?” he asks. “And why do I taste americano?”" : "It's the delivery guy from Tuesday. “Why is it so cold in here?” he asks."
+      is(s, "coffee") ? "It's Furkan from deliveries. “Why is it so cold in here?” Furkan asks. “And why do I taste americano?”" : "It's Furkan from deliveries. “Why is it so cold in here?”"
     }
 
 Turns out the infection can't survive two hours at −2 °C.
@@ -480,9 +480,9 @@ Turns out they were never hungry. Just thirsty.`,
     ending: "lone",
     mins: 180,
     text: (s) => `${
-      is(s, "deniz")
+      is(s, "eren")
         ? "You lift the keys off the hook as quietly as you can and slip out to the van. Behind you, someone calls your name. You don't look back."
-        : "You grab the keys, jump into the van and floor it. In the side mirror, Deniz leaps off the roof and makes a gesture that isn't in any of the kiosk's three supported languages."
+        : "You grab the keys, jump into the van and floor it. In the side mirror, Eren leaps off the roof and makes a gesture that isn't in any of the kiosk's three supported languages."
     }
 
 You drive until the sun comes up. You survive.
@@ -503,7 +503,7 @@ Every light in the warehouse goes out. Across the city, forty kiosk screens fade
 
 Outside, the moaning stops. One by one, they sit down on the pavement. They curl up against the kiosks. They fall asleep.
 
-At 08:00 the city wakes up — grumpy, confused, with terrible neck pain, but human. Kerem wakes up at the loading dock, surrounded by six empty cans. “I just wanted to finish my double shift,” he mumbles.
+At 08:00 the city wakes up — grumpy, confused, with terrible neck pain, but human. Furkan wakes up at the loading dock, surrounded by six empty cans. “I just wanted to finish my double shift,” Furkan mumbles.
 
 BUZLIME ZERO is recalled by noon. Byte gets a lifetime supply of tuna and a new job title: Chief Sleep Officer.`,
   },

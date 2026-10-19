@@ -13,7 +13,7 @@ interface Save {
   log: Entry[];
 }
 
-const SAVE_KEY = "eo-nightshift-v1";
+const SAVE_KEY = "eo-nightshift-v2"; // v2: characters renamed (old saves used other flag ids)
 const ENDINGS_KEY = "eo-nightshift-endings";
 const CPS = 260; // typewriter speed, characters per second
 
