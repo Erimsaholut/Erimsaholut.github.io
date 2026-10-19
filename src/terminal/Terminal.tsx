@@ -52,7 +52,9 @@ export default function Terminal({ onClose, onPlay, onAdventure }: { onClose: ()
   const lite = useMemo(() => isLiteDevice(), []);
   const [lines, setLines] = useState<Line[]>([]);
   const [value, setValue] = useState("");
-  const [matrix, setMatrix] = useState(false);
+  // Non-zero while the digital rain runs; bumping it restarts the effect if "matrix" is run again.
+  const [matrix, setMatrix] = useState(0);
+  const endMatrix = useCallback(() => setMatrix(0), []);
   const [busy, setBusy] = useState(false);
   const [vh, setVh] = useState(() => window.visualViewport?.height ?? window.innerHeight);
   const nextId = useRef(0);
@@ -170,7 +172,7 @@ export default function Terminal({ onClose, onPlay, onAdventure }: { onClose: ()
           close();
           onAdventure();
         },
-        matrix: () => setMatrix(true),
+        matrix: () => setMatrix((n) => n + 1),
         history: history.current,
         startedAt: startedAt.current,
       };
@@ -261,13 +263,16 @@ export default function Terminal({ onClose, onPlay, onAdventure }: { onClose: ()
           </button>
         </div>
 
-        <div ref={scroller} className="relative flex-1 overflow-y-auto px-4 py-3">
-          {lines.map((l) => (
-            <div key={l.id} className="min-h-[1.3em] whitespace-pre-wrap break-words">
-              {l.node}
-            </div>
-          ))}
-          {matrix && <Matrix onDone={() => setMatrix(false)} />}
+        {/* The rain sits over the visible part of the output, not the top of the (possibly scrolled) history. */}
+        <div className="relative min-h-0 flex-1">
+          <div ref={scroller} className="absolute inset-0 overflow-y-auto px-4 py-3">
+            {lines.map((l) => (
+              <div key={l.id} className="min-h-[1.3em] whitespace-pre-wrap break-words">
+                {l.node}
+              </div>
+            ))}
+          </div>
+          {matrix > 0 && <Matrix key={matrix} onDone={endMatrix} />}
         </div>
 
         {lite && (
