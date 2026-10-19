@@ -202,11 +202,6 @@ export default function Terminal({ onClose, onPlay, onAdventure }: { onClose: ()
   };
 
   const onKeyDown = (e: ReactKeyboardEvent<HTMLInputElement>) => {
-    if (e.code === "Backquote") {
-      e.preventDefault();
-      close();
-      return;
-    }
     if (e.key === "Enter") {
       e.preventDefault();
       if (busy) return;

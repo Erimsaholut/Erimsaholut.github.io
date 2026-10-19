@@ -13,6 +13,7 @@ const LINKS = [
   { id: "contact", label: "Contact" },
 ];
 
+// Tapping the name (or the logo next to it) five times within 2.5 s opens the hidden terminal.
 export default function Nav({ onLogoSecret }: { onLogoSecret?: () => void }) {
   const logoTaps = useRef<number[]>([]);
   const onLogo = () => {

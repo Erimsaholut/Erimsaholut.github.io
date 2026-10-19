@@ -79,20 +79,6 @@ export default function App() {
     return () => clearTimeout(t);
   }, [allFound]);
 
-  // The key above Tab (physical position, so it works on any keyboard layout) toggles the terminal.
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.code !== "Backquote" || e.ctrlKey || e.metaKey || e.altKey || game || adventure) return;
-      const el = e.target as HTMLElement | null;
-      if (el && (el.tagName === "INPUT" || el.tagName === "TEXTAREA" || el.isContentEditable)) return;
-      e.preventDefault();
-      if (terminal) setTerminal(false);
-      else openTerminal();
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [game, adventure, terminal, openTerminal]);
-
   return (
     <MotionConfig reducedMotion="user">
       {webgl && !lite && (

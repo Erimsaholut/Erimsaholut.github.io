@@ -33,7 +33,7 @@ export const SECRETS: SecretDef[] = [
   {
     id: "terminal",
     title: "Root access",
-    hint: "Press the key above Tab — or tap my logo five times.",
+    hint: "Tap my name in the top bar five times, quickly.",
     found: "Opened the hidden terminal.",
   },
   {
