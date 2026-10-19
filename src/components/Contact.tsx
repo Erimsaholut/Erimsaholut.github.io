@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from "react";
 import Section, { Reveal } from "./Section";
 import { ArrowUpRight, Check, Code, Copy, Download, Mail, Person, Pin } from "./Icons";
 import { CV_FILE, PROFILE, cvUrl } from "../data";
@@ -17,8 +17,9 @@ export default function Contact() {
     }
   };
 
-  // Invisible ink: a line written in the background colour. Selecting a few of its characters reveals it.
+  // Invisible ink: a line written in the background colour. Selecting any part of it reveals it.
   const ink = useRef<HTMLParagraphElement>(null);
+  const hold = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   useEffect(() => {
     const onSelect = () => {
       const sel = document.getSelection();
@@ -29,15 +30,37 @@ export default function Contact() {
         x.selectNodeContents(ink.current);
         if (r.compareBoundaryPoints(Range.START_TO_START, x) > 0) x.setStart(r.startContainer, r.startOffset);
         if (r.compareBoundaryPoints(Range.END_TO_END, x) < 0) x.setEnd(r.endContainer, r.endOffset);
-        if (x.toString().trim().length >= 4) {
+        // Any real character counts (a long-press on a phone often selects a short word like "the").
+        if (x.toString().trim().length > 0) {
           unlock("invisible-ink");
           return;
         }
       }
     };
     document.addEventListener("selectionchange", onSelect);
-    return () => document.removeEventListener("selectionchange", onSelect);
+    return () => {
+      document.removeEventListener("selectionchange", onSelect);
+      clearTimeout(hold.current);
+    };
   }, []);
+
+  // Phones: selecting invisible text with a finger is fiddly, so pressing and holding anywhere on the
+  // (padded) line highlights the whole sentence — which then counts as a selection above.
+  const selectInk = () => {
+    const el = ink.current;
+    const sel = document.getSelection();
+    if (!el || !sel) return;
+    const r = document.createRange();
+    r.selectNodeContents(el);
+    sel.removeAllRanges();
+    sel.addRange(r);
+  };
+  const startHold = (e: ReactPointerEvent) => {
+    if (e.pointerType === "mouse") return;
+    clearTimeout(hold.current);
+    hold.current = setTimeout(selectInk, 420);
+  };
+  const stopHold = () => clearTimeout(hold.current);
 
   const links = [
     { label: "GitHub", sub: PROFILE.github.label, href: PROFILE.github.url, icon: Code },
@@ -107,7 +130,16 @@ export default function Contact() {
           </div>
         </div>
       </Reveal>
-      <p ref={ink} aria-hidden className="mt-6 text-right font-mono text-xs tracking-wide text-transparent">
+      <p
+        ref={ink}
+        aria-hidden
+        onPointerDown={startHold}
+        onPointerUp={stopHold}
+        onPointerCancel={stopHold}
+        onPointerLeave={stopHold}
+        onContextMenu={selectInk}
+        className="mt-2 py-4 text-right font-mono text-xs tracking-wide text-transparent"
+      >
         psst — the little light in the footer speaks Morse. Decode it, then tell the terminal.
       </p>
     </Section>
