@@ -11,7 +11,11 @@ export interface SecretDef {
   hint: string;
   /** Shown once found. */
   found: string;
+  /** No hint at all while locked — you have to stumble on it (or follow another secret). */
+  classified?: boolean;
 }
+
+export const CLASSIFIED_HINT = "Classified. No hints for this one — keep your eyes open.";
 
 export const SECRETS: SecretDef[] = [
   {
@@ -77,7 +81,24 @@ export const SECRETS: SecretDef[] = [
   {
     id: "signal",
     title: "Signal",
-    hint: "A light in the footer keeps blinking a word. Decode it, then tell the terminal.",
+    hint: "",
     found: "Decoded the Morse signal in the footer.",
+    classified: true,
+  },
+  {
+    id: "night-shift",
+    title: "Night shift",
+    hint: "One file in the terminal needs clearance. Find five secrets first.",
+    found: "Clocked in for the night shift at Buzlime.",
+  },
+  {
+    id: "best-ending",
+    title: "Fleet commander",
+    hint: "Survive the night shift — and bring everyone home.",
+    found: "Reached the best ending of Night Shift.",
   },
 ];
+
+/** Secrets needed before the Night Shift adventure opens (the game's own two don't count). */
+export const NIGHT_SHIFT_CLEARANCE = 5;
+export const GAME_SECRETS = ["night-shift", "best-ending"];

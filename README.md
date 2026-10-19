@@ -25,3 +25,9 @@ Secrets are listed in `src/secrets/registry.ts`. To add one, add an entry there 
 `unlock("<id>")` (from `src/secrets/store.ts`) where it's triggered — the footer counter, the
 secrets panel and the "secret found" toast update automatically. Progress is stored in the
 visitor's browser only.
+
+Finding every secret unlocks a downloadable certificate (`src/secrets/Reward.tsx`).
+
+The terminal's `nightshift` command opens **Buzlime: Night Shift**, a branching zombie text
+adventure, once a visitor has found five secrets. The whole story — scenes, choices and the
+five endings — lives in `src/adventure/story.ts`.

@@ -25,6 +25,7 @@ export default {
         ping2: { "0%": { transform: "scale(1)", opacity: "0.7" }, "100%": { transform: "scale(2.6)", opacity: "0" } },
         ripple: { "0%": { transform: "translate(-50%,-50%) scale(0.3)", opacity: "1" }, "100%": { transform: "translate(-50%,-50%) scale(1.7)", opacity: "0" } },
         pop: { "0%": { transform: "scale(1)" }, "40%": { transform: "scale(1.35) rotate(-8deg)" }, "100%": { transform: "scale(1)" } },
+        alarm: { "0%,100%": { opacity: "0.45" }, "50%": { opacity: "1" } },
       },
       animation: {
         blink: "blink 1.1s steps(1) infinite",

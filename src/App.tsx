@@ -14,7 +14,8 @@ import { CursorGlow, ScrollProgress } from "./components/Effects";
 import SafeBoundary from "./three/SafeBoundary";
 import { hasWebGL, isLiteDevice } from "./three/input";
 import { SecretToasts, SecretsPanel } from "./secrets/SecretsUI";
-import { unlock } from "./secrets/store";
+import { REWARD_SEEN_KEY, unlock, useSecrets } from "./secrets/store";
+import { SECRETS } from "./secrets/registry";
 import { useSpeedrun } from "./secrets/speedrun";
 import { useShakeForChaos } from "./secrets/chaos";
 
@@ -22,6 +23,8 @@ const BackgroundScene = lazy(() => import("./three/BackgroundScene"));
 // Easter eggs: each is downloaded only when it's triggered.
 const RegionDefender = lazy(() => import("./game/RegionDefender"));
 const Terminal = lazy(() => import("./terminal/Terminal"));
+const NightShift = lazy(() => import("./adventure/NightShift"));
+const Reward = lazy(() => import("./secrets/Reward"));
 
 export default function App() {
   const reduce = !!useReducedMotion();
@@ -32,6 +35,8 @@ export default function App() {
   const [game, setGame] = useState(false);
   const [terminal, setTerminal] = useState(false);
   const [secrets, setSecrets] = useState(false);
+  const [adventure, setAdventure] = useState(false);
+  const [reward, setReward] = useState(false);
 
   const closeGame = useCallback(() => setGame(false), []);
   const closeTerminal = useCallback(() => setTerminal(false), []);
@@ -45,11 +50,39 @@ export default function App() {
     setTerminal(true);
   }, []);
   const playFromTerminal = useCallback(() => setGame(true), []);
+  const openAdventure = useCallback(() => setAdventure(true), []);
+  const closeAdventure = useCallback(() => setAdventure(false), []);
+  const closeReward = useCallback(() => setReward(false), []);
+  const openReward = useCallback(() => {
+    setSecrets(false);
+    setReward(true);
+  }, []);
+
+  // Finding every secret pops the reward up once, after the last toast has had its moment.
+  const { found } = useSecrets();
+  const allFound = SECRETS.every((s) => found[s.id]);
+  useEffect(() => {
+    if (!allFound) return;
+    try {
+      if (localStorage.getItem(REWARD_SEEN_KEY)) return;
+    } catch {
+      /* no storage — show it anyway */
+    }
+    const t = setTimeout(() => {
+      setReward(true);
+      try {
+        localStorage.setItem(REWARD_SEEN_KEY, "1");
+      } catch {
+        /* fine */
+      }
+    }, 2800);
+    return () => clearTimeout(t);
+  }, [allFound]);
 
   // The key above Tab (physical position, so it works on any keyboard layout) toggles the terminal.
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.code !== "Backquote" || e.ctrlKey || e.metaKey || e.altKey || game) return;
+      if (e.code !== "Backquote" || e.ctrlKey || e.metaKey || e.altKey || game || adventure) return;
       const el = e.target as HTMLElement | null;
       if (el && (el.tagName === "INPUT" || el.tagName === "TEXTAREA" || el.isContentEditable)) return;
       e.preventDefault();
@@ -58,7 +91,7 @@ export default function App() {
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [game, terminal, openTerminal]);
+  }, [game, adventure, terminal, openTerminal]);
 
   return (
     <MotionConfig reducedMotion="user">
@@ -89,7 +122,7 @@ export default function App() {
         {terminal && (
           <SafeBoundary key="terminal" fallback={null}>
             <Suspense fallback={null}>
-              <Terminal onClose={closeTerminal} onPlay={playFromTerminal} />
+              <Terminal onClose={closeTerminal} onPlay={playFromTerminal} onAdventure={openAdventure} />
             </Suspense>
           </SafeBoundary>
         )}
@@ -101,7 +134,25 @@ export default function App() {
           </Suspense>
         </SafeBoundary>
       )}
-      <SecretsPanel open={secrets} onClose={closeSecrets} />
+      <AnimatePresence>
+        {adventure && (
+          <SafeBoundary key="adventure" fallback={null}>
+            <Suspense fallback={<GameBoot label="Clocking in…" />}>
+              <NightShift onClose={closeAdventure} />
+            </Suspense>
+          </SafeBoundary>
+        )}
+      </AnimatePresence>
+      <SecretsPanel open={secrets} onClose={closeSecrets} onReward={openReward} />
+      <AnimatePresence>
+        {reward && (
+          <SafeBoundary key="reward" fallback={null}>
+            <Suspense fallback={null}>
+              <Reward onClose={closeReward} />
+            </Suspense>
+          </SafeBoundary>
+        )}
+      </AnimatePresence>
       <SecretToasts />
     </MotionConfig>
   );

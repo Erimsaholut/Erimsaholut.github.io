@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type KeyboardEvent as ReactKeyboardEvent, type ReactNode } from "react";
 import { motion } from "framer-motion";
-import { ALIASES, COMMANDS, FILES, type Ctx } from "./commands";
-import { unlock } from "../secrets/store";
+import { ALIASES, COMMANDS, FILES, nightShiftClearance, type Ctx } from "./commands";
+import { isFound, unlock } from "../secrets/store";
 import { isLiteDevice } from "../three/input";
 
 const PROMPT = "erimsah@torino:~$";
-const QUICK = ["help", "whoami", "neofetch", "projects", "ls -a", "sudo hire erimsah", "play"];
+const QUICK = ["help", "whoami", "neofetch", "projects", "ls -a", "sudo hire erimsah", "play", "nightshift"];
 const EXPLORER_GOAL = 8;
 
 interface Line {
@@ -48,7 +48,7 @@ function Matrix({ onDone }: { onDone: () => void }) {
   return <canvas ref={ref} className="pointer-events-none absolute inset-0 h-full w-full" aria-hidden />;
 }
 
-export default function Terminal({ onClose, onPlay }: { onClose: () => void; onPlay: () => void }) {
+export default function Terminal({ onClose, onPlay, onAdventure }: { onClose: () => void; onPlay: () => void; onAdventure: () => void }) {
   const lite = useMemo(() => isLiteDevice(), []);
   const [lines, setLines] = useState<Line[]>([]);
   const [value, setValue] = useState("");
@@ -96,6 +96,13 @@ export default function Terminal({ onClose, onPlay }: { onClose: () => void; onP
       </span>,
       ""
     );
+    if (nightShiftClearance().ok && !isFound("night-shift"))
+      print(
+        <span key="w3" className="text-[#FF6A55]">
+          📟 1 new page from the Buzlime warehouse — run <span className="text-amber">nightshift</span>
+        </span>,
+        ""
+      );
     if (!lite) input.current?.focus();
   }, [print, lite]);
 
@@ -159,6 +166,10 @@ export default function Terminal({ onClose, onPlay }: { onClose: () => void; onP
           close();
           onPlay();
         },
+        openAdventure: () => {
+          close();
+          onAdventure();
+        },
         matrix: () => setMatrix(true),
         history: history.current,
         startedAt: startedAt.current,
@@ -171,7 +182,7 @@ export default function Terminal({ onClose, onPlay }: { onClose: () => void; onP
         print("");
       }
     },
-    [print, close, onPlay]
+    [print, close, onPlay, onAdventure]
   );
 
   const complete = () => {

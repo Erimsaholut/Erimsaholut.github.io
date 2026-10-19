@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { SECRETS } from "./registry";
+import { CLASSIFIED_HINT, SECRETS } from "./registry";
 import { dismissToast, resetSecrets, useSecrets } from "./store";
 import { confetti } from "./confetti";
 
@@ -65,19 +65,22 @@ export function SecretsBadge({ onOpen }: { onOpen: () => void }) {
   const { found } = useSecrets();
   const count = Object.keys(found).length;
   const total = SECRETS.length;
+  const done = count === total;
   return (
     <button
       onClick={onOpen}
-      className="group inline-flex items-center gap-2 rounded-full border border-line px-3 py-1.5 font-mono text-[11px] text-faint transition hover:border-amber/50 hover:text-amber"
+      className={`group inline-flex items-center gap-2 rounded-full border px-3 py-1.5 font-mono text-[11px] transition hover:border-amber/50 hover:text-amber ${
+        done ? "border-amber/40 bg-amber/10 text-amber shadow-[0_0_24px_-6px_rgba(255,181,71,0.6)]" : "border-line text-faint"
+      }`}
     >
       <span className={count ? "text-amber" : ""}>◆</span>
-      {count}/{total} secrets found
+      {done ? `${count}/${total} · certified secret hunter` : `${count}/${total} secrets found`}
     </button>
   );
 }
 
 /** List of every secret: found ones with details, locked ones with a hint. */
-export function SecretsPanel({ open, onClose }: { open: boolean; onClose: () => void }) {
+export function SecretsPanel({ open, onClose, onReward }: { open: boolean; onClose: () => void; onReward: () => void }) {
   const { found } = useSecrets();
   const count = Object.keys(found).length;
   const total = SECRETS.length;
@@ -136,6 +139,19 @@ export function SecretsPanel({ open, onClose }: { open: boolean; onClose: () => 
               </button>
             </div>
 
+            {count === total && (
+              <button
+                onClick={onReward}
+                className="mt-5 flex w-full items-center justify-between gap-3 rounded-2xl border border-amber/40 bg-amber/10 px-4 py-3 text-left transition hover:bg-amber/15"
+              >
+                <span>
+                  <span className="block text-sm font-semibold text-amber">🏆 Your reward is waiting</span>
+                  <span className="block text-xs text-muted">Get your Certified Secret Hunter certificate</span>
+                </span>
+                <span className="text-amber">→</span>
+              </button>
+            )}
+
             <div className="mt-5 h-1.5 overflow-hidden rounded-full bg-line">
               <motion.div className="h-full rounded-full bg-amber" initial={false} animate={{ width: `${(count / total) * 100}%` }} transition={{ duration: 0.6, ease: EASE }} />
             </div>
@@ -155,7 +171,7 @@ export function SecretsPanel({ open, onClose }: { open: boolean; onClose: () => 
                     </span>
                     <div className="min-w-0">
                       <p className={`text-sm font-semibold ${at ? "text-ink" : "text-faint"}`}>{at ? s.title : "???"}</p>
-                      <p className="mt-0.5 text-[13px] leading-snug text-muted">{at ? s.found : s.hint}</p>
+                      <p className="mt-0.5 text-[13px] leading-snug text-muted">{at ? s.found : s.classified ? CLASSIFIED_HINT : s.hint}</p>
                       {at && <p className="mt-1 font-mono text-[10px] text-faint">{new Date(at).toLocaleDateString()}</p>}
                     </div>
                   </li>

@@ -4,7 +4,8 @@ import { useOnScreen } from "../three/useOnScreen";
 /*
  * Signal: a tiny "tx" light in the footer that keeps blinking a word in Morse code.
  * Tap it to listen (beeps + the dots and dashes received so far). Typing the decoded
- * word into the terminal unlocks the secret — see the `akhisar` command.
+ * word into the terminal unlocks the secret — see the `akhisar` command. The only clue
+ * that the terminal is involved is the invisible-ink line in the contact section.
  */
 
 export const SIGNAL_WORD = "AKHISAR";
@@ -113,7 +114,7 @@ export default function Signal() {
             {trail.replace(/\./g, "·").replace(/-/g, "−")}
             <span className="ml-0.5 inline-block w-2 animate-blink text-faint">▍</span>
           </p>
-          <p className="mt-2 text-xs leading-relaxed text-muted">♪ Listening. It repeats every few seconds — decode it, then tell the terminal.</p>
+          <p className="mt-2 text-xs leading-relaxed text-muted">♪ Listening. It repeats every few seconds.</p>
         </div>
       )}
     </div>

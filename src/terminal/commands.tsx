@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { CERTS, EDUCATION, FEATURED_CERT, LANGUAGES, PROFILE, PROJECTS, SKILLS } from "../data";
-import { SECRETS } from "../secrets/registry";
+import { CLASSIFIED_HINT, GAME_SECRETS, NIGHT_SHIFT_CLEARANCE, SECRETS } from "../secrets/registry";
 import { isFound, unlock } from "../secrets/store";
 import { taintSpeedrun } from "../secrets/speedrun";
 import { runChaos } from "../secrets/chaos";
@@ -12,13 +12,14 @@ export interface Ctx {
   clear: () => void;
   close: () => void;
   openGame: () => void;
+  openAdventure: () => void;
   matrix: () => void;
   history: string[];
   startedAt: number;
 }
 
 export interface Command {
-  desc: string;
+  desc: string | (() => string);
   hidden?: boolean;
   run: (args: string[], ctx: Ctx) => void | Promise<void>;
 }
@@ -53,8 +54,15 @@ export const FILES: Record<string, string> = {
   "cv.txt": "",
   "skills.json": "",
   "projects.md": "",
+  "nightshift.sh": "",
   ".secret": "",
 };
+
+/** How many of the site's secrets are found, against what the Night Shift adventure needs. */
+export function nightShiftClearance() {
+  const have = SECRETS.filter((s) => !GAME_SECRETS.includes(s.id) && isFound(s.id)).length;
+  return { have, need: NIGHT_SHIFT_CLEARANCE, ok: have >= NIGHT_SHIFT_CLEARANCE };
+}
 
 function cv(): ReactNode[] {
   return [
@@ -90,7 +98,7 @@ export const COMMANDS: Record<string, Command> = {
           <span key={name}>
             {"  "}
             <K>{name.padEnd(12)}</K>
-            <M>{c.desc}</M>
+            <M>{typeof c.desc === "function" ? c.desc() : c.desc}</M>
           </span>
         )),
         "",
@@ -224,7 +232,7 @@ export const COMMANDS: Record<string, Command> = {
     run: (args, { print }) => {
       const all = args.some((a) => a.startsWith("-") && a.includes("a"));
       const names = Object.keys(FILES).filter((f) => all || !f.startsWith("."));
-      print(<span key="ls">{(all ? [".", "..", ...names] : names).map((n) => <span key={n} className={n.startsWith(".") ? "mr-4 text-muted" : "mr-4 text-sky"}>{n}</span>)}</span>);
+      print(<span key="ls">{(all ? [".", "..", ...names] : names).map((n) => <span key={n} className={n.startsWith(".") ? "mr-4 text-muted" : n.endsWith(".sh") ? "mr-4 text-sage" : "mr-4 text-sky"}>{n}</span>)}</span>);
     },
   },
   cat: {
@@ -235,6 +243,19 @@ export const COMMANDS: Record<string, Command> = {
       if (f === "cv.txt") return print(...cv());
       if (f === "skills.json") return print(<pre key="j" className="whitespace-pre-wrap">{JSON.stringify(Object.fromEntries(SKILLS.map((s) => [s.group, s.items])), null, 2)}</pre>);
       if (f === "projects.md") return COMMANDS.projects.run([], { print } as Ctx);
+      if (f === "nightshift.sh") {
+        const { ok, need } = nightShiftClearance();
+        return print(
+          <M key="1">#!/bin/sh</M>,
+          <M key="2"># BUZLIME — night shift runbook</M>,
+          <M key="3"># {ok ? "clearance: granted" : `CLASSIFIED — requires clearance level ${need}`}</M>,
+          "exec ./nightshift --clock-in",
+          "",
+          <span key="r">
+            Run it with <K>./nightshift.sh</K>
+          </span>
+        );
+      }
       if (f === ".secret") {
         unlock("hidden-file");
         return print(
@@ -309,6 +330,39 @@ export const COMMANDS: Record<string, Command> = {
     hidden: true,
     run: (_a, { print }) => print(<span key="d" className="text-[#FF5A4F]">hire: permission denied — try: sudo hire erimsah</span>),
   },
+  nightshift: {
+    desc: () => (nightShiftClearance().ok ? "📟 a zombie night shift at Buzlime (text adventure)" : "🔒 classified — needs clearance"),
+    run: async (_a, { print, openAdventure }) => {
+      const { have, need, ok } = nightShiftClearance();
+      if (!ok) {
+        const left = need - have;
+        print(
+          <span key="d" className="text-[#FF5A4F]">
+            ACCESS DENIED — clearance {have}/{need}
+          </span>,
+          <M key="m">
+            nightshift.sh is classified. Find {left} more secret{left === 1 ? "" : "s"} on this site, then come back.
+          </M>,
+          <M key="h">Stuck? "secrets" shows the hints.</M>
+        );
+        return;
+      }
+      print(
+        <S key="g">✓ Clearance granted ({have}/{need}).</S>,
+        <span key="p">📟 PAGE · Buzlime warehouse · 02:47 — “Night shift. Something's wrong. Come in.”</span>
+      );
+      await sleep(1200);
+      openAdventure();
+    },
+  },
+  sh: {
+    desc: "",
+    hidden: true,
+    run: (args, ctx) => {
+      if (args[0]?.replace(/^\.\//, "") === "nightshift.sh") return COMMANDS.nightshift.run([], ctx);
+      ctx.print(<M key="s">You're already in a shell. 🙂 Try ./nightshift.sh</M>);
+    },
+  },
   play: {
     desc: "launch Region Defender",
     run: async (_a, { print, openGame }) => {
@@ -342,7 +396,7 @@ export const COMMANDS: Record<string, Command> = {
               {"  "}<S>✓</S> {s.title}
             </span>
           ) : (
-            <M key={s.id}>{"  "}? ??? — {s.hint}</M>
+            <M key={s.id}>{"  "}? ??? — {s.classified ? CLASSIFIED_HINT : s.hint}</M>
           )
         )
       );
@@ -415,4 +469,4 @@ export const COMMANDS: Record<string, Command> = {
   },
 };
 
-export const ALIASES: Record<string, string> = { hi: "hello", nano: "vim", cls: "clear", quit: "exit", game: "play", "?": "help" };
+export const ALIASES: Record<string, string> = { "./nightshift.sh": "nightshift", "nightshift.sh": "nightshift", bash: "sh", zsh: "sh", hi: "hello", nano: "vim", cls: "clear", quit: "exit", game: "play", "?": "help" };

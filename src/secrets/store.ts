@@ -18,6 +18,8 @@ interface Snapshot {
 }
 
 const KEY = "eo-secrets-v1";
+/** Set once the "you found everything" reward has popped up by itself. */
+export const REWARD_SEEN_KEY = "eo-reward-seen";
 const subs = new Set<() => void>();
 
 function load(): Found {
@@ -64,6 +66,11 @@ export function dismissToast(key: number) {
 export function resetSecrets() {
   found = {};
   save();
+  try {
+    localStorage.removeItem(REWARD_SEEN_KEY);
+  } catch {
+    /* fine */
+  }
   emit();
 }
 
