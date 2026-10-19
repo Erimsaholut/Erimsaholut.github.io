@@ -14,6 +14,15 @@ export const PROFILE = {
     "I'm a Computer Engineering student at Politecnico di Torino, focused on cloud computing and AWS. I hold the AWS Certified Cloud Practitioner credential, and I've built several Flutter apps — including freelance work — on real-time Firebase backends, which taught me to turn real-world requirements into working systems. I also enjoy data analysis with Python. My goal is to grow into a solutions engineering role, and I'm looking for an internship where I can gain industry experience on real cloud problems.",
 };
 
+export const SITE_URL = "https://erimsaholut.github.io";
+/** The downloadable CV in public/. Regenerate it (and the link preview image) with `npm run assets` after editing this file. */
+export const CV_FILE = "Erimsah-Olut-CV.pdf";
+/** Where the browser finds it (respects Vite's base path). */
+export const cvUrl = () => `${import.meta.env?.BASE_URL ?? "/"}${CV_FILE}`;
+/** The CV's profile paragraph — the site's summary, in CV voice. */
+export const CV_SUMMARY =
+  "Computer Engineering student at Politecnico di Torino, focused on cloud computing and AWS. AWS Certified Cloud Practitioner (CLF-C02). Built several Flutter apps on real-time Firebase backends — including a multilingual vending-kiosk app now running in production at Buzlime — and enjoys data analysis with Python. Aiming to grow into a solutions engineering role; looking for an internship to gain industry experience on real cloud problems.";
+
 export const FOCUS_WORDS = ["cloud computing.", "AWS.", "backend systems."];
 
 export const STATS = [

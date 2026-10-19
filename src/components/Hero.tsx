@@ -3,9 +3,9 @@ import { motion, useReducedMotion } from "framer-motion";
 import SafeBoundary from "../three/SafeBoundary";
 import { hasWebGL, isLiteDevice } from "../three/input";
 import { EASE } from "./Section";
-import { ArrowDown, Pin } from "./Icons";
+import { ArrowDown, Download, Pin } from "./Icons";
 import { CountUp, Magnetic, Typewriter } from "./Effects";
-import { FOCUS_WORDS, PROFILE, STATS } from "../data";
+import { CV_FILE, FOCUS_WORDS, PROFILE, STATS, cvUrl } from "../data";
 import { unlock } from "../secrets/store";
 
 const HeroGlobe = lazy(() => import("../three/HeroGlobe"));
@@ -160,6 +160,13 @@ export default function Hero({ onSecret }: { onSecret: () => void }) {
                 Get in touch
               </a>
             </Magnetic>
+            <a
+              href={cvUrl()}
+              download={CV_FILE}
+              className="inline-flex items-center gap-2 rounded-md px-3 py-3 text-sm font-medium text-muted transition hover:text-ink"
+            >
+              <Download /> Download CV
+            </a>
           </motion.div>
         </div>
 

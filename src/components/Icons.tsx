@@ -21,4 +21,5 @@ export const Menu = (p: P) => <Icon {...p}><path d="M4 7h16M4 12h16M4 17h10" /><
 export const Close = (p: P) => <Icon {...p}><path d="M6 6l12 12M18 6 6 18" /></Icon>;
 export const Code = (p: P) => <Icon {...p}><path d="m8.5 8-4 4 4 4M15.5 8l4 4-4 4M13.5 5.5l-3 13" /></Icon>;
 export const Person = (p: P) => <Icon {...p}><circle cx="12" cy="8.5" r="3.5" /><path d="M5 19.5c1.2-3.2 3.8-5 7-5s5.8 1.8 7 5" /></Icon>;
+export const Download = (p: P) => <Icon {...p}><path d="M12 4v11M7.5 10.5 12 15l4.5-4.5M5 20h14" /></Icon>;
 export const Badge = (p: P) => <Icon {...p}><circle cx="12" cy="9.5" r="5.5" /><path d="m9 14.3-1.5 6.2L12 18l4.5 2.5-1.5-6.2" /></Icon>;

@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { gameOverlay } from "../three/gameOverlay";
 import { unlock } from "../secrets/store";
-import { COMPANIONS, ENDINGS, ENDING_ORDER, ITEMS, MAX_HP, SCENES, START, clock, type Choice, type EndingId, type State } from "./story";
+import { COMPANIONS, ENDINGS, ENDING_ORDER, ITEMS, MAX_HP, SCENES, START, ZERO_AFTER, clock, type Choice, type EndingId, type State } from "./story";
 
 /* BUZLIME: NIGHT SHIFT — the text adventure's screen. Progress and found endings stay in this browser. */
 
@@ -45,6 +45,8 @@ const LOCATIONS: Record<string, string> = {
   dock: "the loading dock",
   workshop: "the workshop",
   coldroom: "the cold room",
+  crate: "the cold room",
+  tape: "the office",
   server: "the server room",
   server_in: "the server room",
 };
@@ -114,6 +116,7 @@ export default function NightShift({ onClose }: { onClose: () => void }) {
       return next;
     });
     if (ending === "best") unlock("best-ending");
+    if (ending === "zero") unlock("patient-zero");
   }, [ending]);
 
   const enter = useCallback(
@@ -137,7 +140,7 @@ export default function NightShift({ onClose }: { onClose: () => void }) {
       return;
     }
     setLog([]);
-    enter("intro", { ...START, items: [], flags: [] });
+    enter("intro", { ...START, items: [], flags: [], seen: endings });
   };
 
   const choose = (c: Choice) => {
@@ -378,7 +381,10 @@ function TitleScreen({ saved, endings, onStart }: { saved: Save | null; endings:
           {saved ? "New shift" : "Clock in →"}
         </button>
       </div>
-      <p className="mt-8 font-mono text-[11px] text-faint">
+      {endings.length >= ZERO_AFTER && !endings.includes("zero") && (
+        <p className="mt-8 font-mono text-[11px] text-[#FF8A75]">📼 There's something new on the security tapes tonight.</p>
+      )}
+      <p className={`${endings.length >= ZERO_AFTER && !endings.includes("zero") ? "mt-2" : "mt-8"} font-mono text-[11px] text-faint`}>
         Endings found: {endings.length}/{ENDING_ORDER.length} · 1–9 to choose · esc to leave
       </p>
     </div>

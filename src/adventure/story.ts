@@ -5,9 +5,13 @@
  * (`when`), shown but locked with a reason (`need` + `why`), change the state (`run`), and
  * pick its destination at random by returning a scene id from `run`.
  * Dropping to 0 health anywhere ends the run in the "bad" ending.
+ *
+ * The secret ending ("zero") only becomes reachable after three other endings have been seen:
+ * a rewindable camera tape appears, which leads to a crate in the cold room, which explains
+ * what the zombies really are — and why Byte the cat matters.
  */
 
-export type EndingId = "best" | "alt" | "funny" | "lone" | "bad";
+export type EndingId = "best" | "alt" | "funny" | "lone" | "bad" | "zero";
 
 export interface State {
   hp: number;
@@ -15,6 +19,8 @@ export interface State {
   flags: string[];
   /** Minutes since midnight — shown as the clock. */
   minutes: number;
+  /** Endings seen in earlier runs (copied in when a run starts). */
+  seen?: EndingId[];
 }
 
 export interface Choice {
@@ -46,8 +52,11 @@ export const ENDINGS: Record<EndingId, { title: string; emoji: string; kind: str
   funny: { title: "Zombie Happy Hour", emoji: "🍋", kind: "Lucky ending" },
   lone: { title: "Employee of the Month", emoji: "🚐", kind: "Lone ending" },
   bad: { title: "Zombie On Call", emoji: "🧟", kind: "Bad ending" },
+  zero: { title: "Patient Zero", emoji: "😴", kind: "Secret ending" },
 };
-export const ENDING_ORDER: EndingId[] = ["best", "alt", "funny", "lone", "bad"];
+export const ENDING_ORDER: EndingId[] = ["best", "alt", "funny", "lone", "bad", "zero"];
+/** Endings needed before the secret one can be found. */
+export const ZERO_AFTER = 3;
 
 export const ITEMS: Record<string, string> = {
   flashlight: "🔦 Flashlight",
@@ -63,6 +72,7 @@ const give = (s: State, item: string) => void (has(s, item) || s.items.push(item
 const take = (s: State, item: string) => void (s.items = s.items.filter((i) => i !== item));
 const set = (s: State, flag: string) => void (is(s, flag) || s.flags.push(flag));
 const hurt = (s: State, n = 1) => void (s.hp -= n);
+const replay = (s: State) => (s.seen?.length ?? 0) >= ZERO_AFTER;
 
 const INTERN = "At 08:00 the morning shift finds you";
 const DEDICATION = "“Wow,” says the intern. “Dedication.”";
@@ -120,7 +130,7 @@ A thud. Static. Then, very faintly: “…the generator… needs a fuse…”`,
   },
 
   cams: {
-    text: () => `The monitor wall flickers to life.
+    text: (s) => `The monitor wall flickers to life.
 
 FRONT GATE — Murat's flashlight lies in the road, still on. Three figures sway around the guard booth, moving like a video that keeps buffering.
 
@@ -128,7 +138,25 @@ LOADING DOCK — The delivery van's back door is open. Someone is on the van's r
 
 WORKSHOP — Something small and orange sits on top of a kiosk, staring straight into the lens. Byte, the warehouse cat. Unbothered.
 
-COLD ROOM — Empty. −2 °C. The compressor is running on battery: 19%.`,
+COLD ROOM — Empty. −2 °C. The compressor is running on battery: 19%.${
+      replay(s) && !is(s, "zeroClue") ? "\n\nOn the shelf below the monitors sits a tape you've never noticed before. The label is in Kerem's handwriting: “LOADING DOCK 01:12 — DON'T WATCH”." : ""
+    }`,
+    choices: [
+      { label: "Rewind the loading dock tape to 01:12", to: "tape", when: (s) => replay(s) && !is(s, "zeroClue"), run: (s) => set(s, "zeroClue") },
+      { label: "Head out into the hallway", to: "hall" },
+    ],
+  },
+
+  tape: {
+    text: () => `01:12 — LOADING DOCK. Kerem from deliveries unloads the late restock, yawning so hard his jaw clicks.
+
+One crate is different: matte black, stamped BUZLIME ZERO — PROTOTYPE — DO NOT DRINK.
+
+Kerem looks left. Looks right. Drinks one. Then another. Then four more.
+
+At 01:19 he stops moving. At 01:23 he starts again — wrong, like a video that keeps buffering. He shuffles off toward the street, and the crate gets wheeled into the cold room.
+
+So that's where it started.`,
     choices: [{ label: "Head out into the hallway", to: "hall" }],
   },
 
@@ -306,13 +334,27 @@ You dive behind a kiosk while they tear into the speakers, and something rakes a
 The compressor display blinks: BATTERY 19%. Without the generator, this place will be warm by sunrise.`,
       ];
       if (is(s, "knowsCold")) out.push("You think of the zombies at the dock, freezing up the moment they touched the cold glass. An idea starts to form.");
+      if (is(s, "zeroClue") && !is(s, "knowsSleep"))
+        out.push("Behind the lime crates: a matte black crate. BUZLIME ZERO — PROTOTYPE — DO NOT DRINK. Half the cans are missing.");
       if (is(s, "cat")) out.push("Byte digs every claw into your hoodie. Byte is not going in there.");
       return out.join("\n\n");
     },
     choices: [
+      { label: "Open the black BUZLIME ZERO crate", to: "crate", when: (s) => is(s, "zeroClue") && !is(s, "knowsSleep"), run: (s) => set(s, "knowsSleep") },
       { label: "Hide in here until morning", to: "end_frozen" },
       { label: "Back to the hallway", to: "hall" },
     ],
+  },
+
+  crate: {
+    text: () => `Cans of BUZLIME ZERO: “Zero sugar. Zero sleep. 900 mg caffeine per can.” Taped inside the lid, a page from the R&D lab:
+
+“Trial notes, batch Z-0. Test subjects stayed awake for 96 hours. Then they stayed awake… differently. Drawn to light and noise. Not dangerous while asleep.
+
+Only known remedy: deep sleep. Subjects calmed down within seconds when exposed to low, steady sounds — rain, white noise, and (unexpectedly) a cat purring.”
+
+They're not undead. They're un-slept.`,
+    choices: [{ label: "Back to the hallway", to: "hall" }],
   },
 
   server: {
@@ -367,6 +409,13 @@ Your laptop chimes: UPLINK AVAILABLE — fleet update ready to resume at 63%. Bu
         to: "end_best",
         need: (s) => is(s, "murat") && is(s, "deniz"),
         why: "You can't hold the door and fix the antenna alone",
+      },
+      {
+        label: "Night mode: lights out, and Byte's purr on every kiosk",
+        to: "end_zero",
+        when: (s) => is(s, "knowsSleep"),
+        need: (s) => is(s, "cat"),
+        why: "You'd need something that purrs",
       },
       { label: "Lure them all into the cold room and lock the door", to: "end_cold", run: (s) => (s.hp < 2 ? "end_cold_fail" : undefined) },
       { label: "Barricade the server room and wait for sunrise", to: "end_barricade" },
@@ -441,6 +490,22 @@ You drive until the sun comes up. You survive.
 The next morning, every Buzlime kiosk in the city shows the same photo: you, mid-escape, under a big headline.
 
 EMPLOYEE OF THE MONTH: ABANDONED THE NIGHT SHIFT.`,
+  },
+
+  end_zero: {
+    ending: "zero",
+    mins: 230,
+    text: () => `You hold the laptop's microphone up to Byte. Byte, for once, cooperates: a deep, rumbling, industrial-grade purr. You record ten seconds, loop it, and type:
+
+deploy --fleet all --mode night --audio byte_purr.wav
+
+Every light in the warehouse goes out. Across the city, forty kiosk screens fade to black, and their speakers start to purr.
+
+Outside, the moaning stops. One by one, they sit down on the pavement. They curl up against the kiosks. They fall asleep.
+
+At 08:00 the city wakes up — grumpy, confused, with terrible neck pain, but human. Kerem wakes up at the loading dock, surrounded by six empty cans. “I just wanted to finish my double shift,” he mumbles.
+
+BUZLIME ZERO is recalled by noon. Byte gets a lifetime supply of tuna and a new job title: Chief Sleep Officer.`,
   },
 
   end_bitten: {

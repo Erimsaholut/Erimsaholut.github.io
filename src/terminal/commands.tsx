@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { CERTS, EDUCATION, FEATURED_CERT, LANGUAGES, PROFILE, PROJECTS, SKILLS } from "../data";
+import { CERTS, CV_FILE, EDUCATION, FEATURED_CERT, LANGUAGES, PROFILE, PROJECTS, SKILLS, cvUrl } from "../data";
 import { CLASSIFIED_HINT, GAME_SECRETS, NIGHT_SHIFT_CLEARANCE, SECRETS } from "../secrets/registry";
 import { isFound, unlock } from "../secrets/store";
 import { taintSpeedrun } from "../secrets/speedrun";
@@ -81,6 +81,12 @@ function cv(): ReactNode[] {
     <S key="s">FOCUS</S>,
     "  Cloud computing · AWS · Backend systems",
     "",
+    <span key="d">
+      PDF version:{" "}
+      <a href={cvUrl()} download={CV_FILE} className="text-amber underline underline-offset-2 hover:text-ink">
+        {CV_FILE}
+      </a>
+    </span>,
     <span key="h">
       Want the full thing? Run <K>projects</K>, <K>skills</K> or <K>sudo hire erimsah</K>.
     </span>,

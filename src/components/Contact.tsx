@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import Section, { Reveal } from "./Section";
-import { ArrowUpRight, Check, Code, Copy, Mail, Person, Pin } from "./Icons";
-import { PROFILE } from "../data";
+import { ArrowUpRight, Check, Code, Copy, Download, Mail, Person, Pin } from "./Icons";
+import { CV_FILE, PROFILE, cvUrl } from "../data";
 import { isFound, unlock } from "../secrets/store";
 
 export default function Contact() {
@@ -70,6 +70,13 @@ export default function Contact() {
                   {copied ? <Check className="w-4 h-4 text-sage" /> : <Copy className="w-4 h-4" />}
                   {copied ? "Copied" : "Copy"}
                 </button>
+                <a
+                  href={cvUrl()}
+                  download={CV_FILE}
+                  className="inline-flex items-center gap-2 rounded-md border border-line bg-bg/60 px-4 py-3.5 text-sm text-ink transition hover:border-ink/30"
+                >
+                  <Download className="w-4 h-4" /> CV (PDF)
+                </a>
               </div>
               <p className="mt-6 inline-flex items-center gap-2 text-sm text-faint">
                 <Pin className="w-4 h-4" /> {PROFILE.location}

@@ -97,8 +97,14 @@ export const SECRETS: SecretDef[] = [
     hint: "Survive the night shift — and bring everyone home.",
     found: "Reached the best ending of Night Shift.",
   },
+  {
+    id: "patient-zero",
+    title: "Patient Zero",
+    hint: "Some tapes are only worth rewinding after you've seen a few endings.",
+    found: "Found the secret ending of Night Shift.",
+  },
 ];
 
 /** Secrets needed before the Night Shift adventure opens (the game's own two don't count). */
 export const NIGHT_SHIFT_CLEARANCE = 5;
-export const GAME_SECRETS = ["night-shift", "best-ending"];
+export const GAME_SECRETS = ["night-shift", "best-ending", "patient-zero"];
