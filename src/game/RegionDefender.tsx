@@ -408,7 +408,7 @@ export default function RegionDefender({ onClose, lite }: { onClose: () => void;
                 <ul className="mt-6 space-y-2.5 text-sm text-ink/90">
                   <li className="flex gap-3">
                     <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-[#FF5A4F]" />
-                    Tap or click incoming packets to block them. Purple ones take 3 hits.
+                    Tap or click incoming packets to block them. Purple ones (from wave 4) take 3 hits.
                   </li>
                   <li className="flex gap-3">
                     <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-sky" />

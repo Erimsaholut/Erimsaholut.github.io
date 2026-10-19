@@ -35,7 +35,7 @@ export const ABILITIES: Record<Ability, { name: string; cost: number; key: strin
   },
 };
 
-export const CREDIT_RULES = "Earn credits by blocking packets (+4, purple +10) and by clearing waves.";
+export const CREDIT_RULES = "Earn credits by blocking packets (+5, purple +12) and by clearing waves.";
 
 export const MAX_DOWN = 4;
 const PULSE_CD = 12;
@@ -433,7 +433,7 @@ export class Game {
     const y = e.clientY - r.top;
     this.scene.updateMatrixWorld();
     if (this.targeting) this.canvas.style.cursor = this.pickHub(x, y, 50) ? "pointer" : "cell";
-    else this.canvas.style.cursor = this.pickThreat(x, y, 34) ? "pointer" : "crosshair";
+    else this.canvas.style.cursor = this.pickThreat(x, y, 40) ? "pointer" : "crosshair";
   }
 
   /** Keyboard shortcuts; returns true when the key was used. */
@@ -513,7 +513,7 @@ export class Game {
   private handleTap(x: number, y: number, pointerType: string) {
     if (this.phase !== "playing") return;
     this.scene.updateMatrixWorld();
-    const radius = pointerType === "mouse" ? 34 : 48;
+    const radius = pointerType === "mouse" ? 40 : 56;
     if (this.targeting) {
       const hub = this.pickHub(x, y, radius + 18);
       if (hub) this.applyAbility(this.targeting, hub);
@@ -543,7 +543,7 @@ export class Game {
     }
     this.score = 0;
     this.wave = 0;
-    this.credits = 40;
+    this.credits = 60;
     this.blocked = 0;
     this.combo = 0;
     this.comboTimer = 0;
@@ -673,12 +673,12 @@ export class Game {
 
   private startWave() {
     this.wave++;
-    this.toSpawn = 6 + 3 * (this.wave - 1);
+    this.toSpawn = 5 + 2 * (this.wave - 1);
     this.spawnTimer = 1.4;
     this.inBreak = false;
     const w = this.wave;
     const sub =
-      w === 1 ? "Incoming traffic" : w === 3 ? "Heavy payloads detected" : w === 4 ? "Botnet swarms detected" : w % 5 === 0 ? "Traffic spike!" : "Traffic rising";
+      w === 1 ? "Incoming traffic" : w === 4 ? "Heavy payloads detected" : w === 6 ? "Botnet swarms detected" : w % 5 === 0 ? "Traffic spike!" : "Traffic rising";
     this.showBanner(`Wave ${w} · ${sub}`);
     this.sfx.wave();
   }
@@ -692,14 +692,14 @@ export class Game {
     if (!online.length) return;
     const w = this.wave;
     const roll = Math.random();
-    const heavy = w >= 3 ? Math.min(0.3, 0.07 * (w - 2)) : 0;
-    const swarm = w >= 4 ? Math.min(0.25, 0.06 * (w - 3)) : 0;
+    const heavy = w >= 4 ? Math.min(0.25, 0.06 * (w - 3)) : 0;
+    const swarm = w >= 6 ? Math.min(0.2, 0.05 * (w - 5)) : 0;
     const kind: Kind = roll < heavy ? "heavy" : roll < heavy + swarm ? "swarm" : "basic";
     const target = online[Math.floor(Math.random() * online.length)];
     const end = this.hubs[target].local.clone();
     const dir = end.clone().normalize().add(this.v1.randomDirection().multiplyScalar(1.15)).normalize();
     const start = dir.multiplyScalar(rand(5.6, 7));
-    const travel = Math.max(3, 7.2 - 0.38 * (w - 1)) * (kind === "heavy" ? 1.35 : kind === "swarm" ? 1.1 : 1) * rand(0.85, 1.15);
+    const travel = Math.max(4.4, 10 - 0.36 * (w - 1)) * (kind === "heavy" ? 1.35 : kind === "swarm" ? 1.1 : 1) * rand(0.85, 1.15);
     this.addThreat(kind, start, end, target, travel);
   }
 
@@ -749,7 +749,7 @@ export class Game {
     }
     const mult = byPlayer ? 1 + Math.min(this.combo - 1, 10) * 0.15 : 1;
     this.score += Math.round((big ? 30 : 10) * mult);
-    this.credits += big ? 10 : 4;
+    this.credits += big ? 12 : 5;
     this.sfx.pop();
   }
 
@@ -767,7 +767,7 @@ export class Game {
       this.sfx.shield();
       return;
     }
-    hub.hp = Math.max(0, hub.hp - (t.kind === "heavy" ? 45 : 20));
+    hub.hp = Math.max(0, hub.hp - (t.kind === "heavy" ? 35 : 15));
     hub.flash = 1;
     this.particles.burst(hub.local, C.red, 44, 2.2, 0.1, 0.7);
     if (!this.opts.reduceMotion) this.shake = Math.min(1.3, this.shake + (t.kind === "heavy" ? 0.9 : 0.5));
@@ -819,7 +819,7 @@ export class Game {
       if (this.spawnTimer <= 0) {
         this.spawn();
         this.toSpawn--;
-        this.spawnTimer = Math.max(0.32, 1.5 - 0.11 * (this.wave - 1)) * rand(0.7, 1.3);
+        this.spawnTimer = Math.max(0.65, 2.2 - 0.12 * (this.wave - 1)) * rand(0.75, 1.25);
       }
     }
 
@@ -839,7 +839,7 @@ export class Game {
           for (let k = 0; k < 3; k++) {
             const target = online[Math.floor(Math.random() * online.length)];
             const before = this.threats.length;
-            this.addThreat("basic", t.pos.clone(), this.hubs[target].local.clone(), target, Math.max(1.2, remaining * rand(0.9, 1.25)));
+            this.addThreat("basic", t.pos.clone(), this.hubs[target].local.clone(), target, Math.max(2.2, remaining * rand(1, 1.3)));
             spawned.push(this.threats.splice(before, 1)[0]);
           }
         }
@@ -888,7 +888,7 @@ export class Game {
   private animate(dt: number) {
     const t = this.time;
     if (!this.drag) {
-      const auto = this.phase === "playing" ? 0.035 : 0.09;
+      const auto = this.phase === "playing" ? 0.022 : 0.09;
       this.spin.rotation.y += (auto + this.spinVel) * dt;
       this.spinVel *= Math.pow(0.04, dt);
     }
