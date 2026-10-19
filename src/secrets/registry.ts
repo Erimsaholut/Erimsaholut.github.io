@@ -50,4 +50,16 @@ export const SECRETS: SecretDef[] = [
     hint: "There's one command every recruiter should run.",
     found: "Ran sudo hire erimsah.",
   },
+  {
+    id: "night-owl",
+    title: "Night owl",
+    hint: "Some things only show up late at night.",
+    found: "Visited between midnight and 5 a.m.",
+  },
+  {
+    id: "speedrunner",
+    title: "Speedrunner",
+    hint: "Get from the top of the page to the very bottom — fast.",
+    found: "Scrolled the whole page in a few seconds.",
+  },
 ];

@@ -9,6 +9,8 @@ export interface Toast {
   key: number;
   /** How many secrets were found at the moment this one unlocked. */
   n: number;
+  /** Optional one-off detail for the toast, e.g. "You scrolled 7,240 px in 2.1 s". */
+  detail?: string;
 }
 interface Snapshot {
   found: Found;
@@ -45,11 +47,11 @@ function save() {
 }
 
 /** Marks a secret as found. Returns true the first time. */
-export function unlock(id: string) {
+export function unlock(id: string, detail?: string) {
   if (!SECRETS.some((s) => s.id === id) || found[id]) return false;
   found = { ...found, [id]: Date.now() };
   save();
-  toasts = [...toasts, { id, key: Date.now() + Math.random(), n: Object.keys(found).length }];
+  toasts = [...toasts, { id, key: Date.now() + Math.random(), n: Object.keys(found).length, detail }];
   emit();
   return true;
 }

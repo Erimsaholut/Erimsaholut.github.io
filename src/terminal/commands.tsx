@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { CERTS, EDUCATION, FEATURED_CERT, LANGUAGES, PROFILE, PROJECTS, SKILLS } from "../data";
 import { SECRETS } from "../secrets/registry";
 import { isFound, unlock } from "../secrets/store";
+import { taintSpeedrun } from "../secrets/speedrun";
 
 /* Commands for the hidden terminal. Output is plain React nodes. */
 
@@ -294,6 +295,7 @@ export const COMMANDS: Record<string, Command> = {
         );
         await sleep(1600);
         close();
+        taintSpeedrun();
         setTimeout(() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" }), 60);
         return;
       }

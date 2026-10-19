@@ -6,6 +6,7 @@ import { EASE } from "./Section";
 import { ArrowDown, Pin } from "./Icons";
 import { CountUp, Magnetic, Typewriter } from "./Effects";
 import { FOCUS_WORDS, PROFILE, STATS } from "../data";
+import { unlock } from "../secrets/store";
 
 const HeroGlobe = lazy(() => import("../three/HeroGlobe"));
 
@@ -41,6 +42,18 @@ export default function Hero({ onSecret }: { onSecret: () => void }) {
   const reduce = !!useReducedMotion();
   const localGlobe = useMemo(() => isLiteDevice() && hasWebGL(), []);
 
+  // Night owl: visitors between 00:00 and 05:00 (their local time) get a greeting and a secret.
+  const night = useMemo(() => {
+    const now = new Date();
+    const forced = import.meta.env.DEV && new URLSearchParams(location.search).has("night"); // dev-only test switch
+    return now.getHours() < 5 || forced ? now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : null;
+  }, []);
+  useEffect(() => {
+    if (!night) return;
+    const t = setTimeout(() => unlock("night-owl", `Visited at ${night} — burning the midnight oil.`), 2600);
+    return () => clearTimeout(t);
+  }, [night]);
+
   return (
     <section id="top" className="relative overflow-hidden pt-28 md:pt-32">
       <div className="graph-paper pointer-events-none absolute inset-0 opacity-60" aria-hidden />
@@ -59,6 +72,20 @@ export default function Hero({ onSecret }: { onSecret: () => void }) {
             <span className="inline-flex items-center gap-1.5 text-xs text-muted">
               <Pin className="w-3.5 h-3.5" /> {PROFILE.location}
             </span>
+            {night && (
+              <motion.span
+                initial={{ opacity: 0, y: -6 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 1.4, duration: 0.6 }}
+                className="inline-flex items-center gap-1.5 rounded-full border border-sky/30 bg-sky/10 px-3 py-1 text-xs text-sky"
+                title={`It's ${night} where you are`}
+              >
+                <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="currentColor" aria-hidden>
+                  <path d="M20.5 14.6A8.5 8.5 0 0 1 9.4 3.5a8.5 8.5 0 1 0 11.1 11.1Z" />
+                </svg>
+                Burning the midnight oil?
+              </motion.span>
+            )}
           </motion.div>
 
           <h1

@@ -15,6 +15,7 @@ import SafeBoundary from "./three/SafeBoundary";
 import { hasWebGL, isLiteDevice } from "./three/input";
 import { SecretToasts, SecretsPanel } from "./secrets/SecretsUI";
 import { unlock } from "./secrets/store";
+import { useSpeedrun } from "./secrets/speedrun";
 
 const BackgroundScene = lazy(() => import("./three/BackgroundScene"));
 // Easter eggs: each is downloaded only when it's triggered.
@@ -25,6 +26,7 @@ export default function App() {
   const reduce = !!useReducedMotion();
   const webgl = useMemo(() => hasWebGL(), []);
   const lite = useMemo(() => isLiteDevice(), []);
+  useSpeedrun();
   const [game, setGame] = useState(false);
   const [terminal, setTerminal] = useState(false);
   const [secrets, setSecrets] = useState(false);

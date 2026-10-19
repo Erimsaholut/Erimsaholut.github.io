@@ -51,7 +51,7 @@ export function SecretToasts() {
                 Secret found · {count}/{total}
               </span>
               <span className="block truncate text-sm font-semibold text-ink">{def.title}</span>
-              <span className="block truncate text-xs text-muted">{count === total ? "You found every secret. Legend. 🏆" : def.found}</span>
+              <span className="block truncate text-xs text-muted">{count === total ? "You found every secret. Legend. 🏆" : current.detail ?? def.found}</span>
             </span>
           </motion.button>
         )}
