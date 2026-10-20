@@ -1,5 +1,6 @@
 import { useSyncExternalStore } from "react";
 import { SECRETS } from "./registry";
+import { NIGHT_SHIFT_ENDINGS_KEY, NIGHT_SHIFT_OLD_KEYS, NIGHT_SHIFT_SAVE_KEY } from "../adventure/keys";
 
 /* Found secrets live in the visitor's own browser (localStorage) — nothing is sent anywhere. */
 
@@ -63,11 +64,12 @@ export function dismissToast(key: number) {
   emit();
 }
 
+/** Starts the hunt over: found secrets, the reward pop-up and Night Shift's endings and saved run. */
 export function resetSecrets() {
   found = {};
   save();
   try {
-    localStorage.removeItem(REWARD_SEEN_KEY);
+    for (const k of [REWARD_SEEN_KEY, NIGHT_SHIFT_SAVE_KEY, NIGHT_SHIFT_ENDINGS_KEY, ...NIGHT_SHIFT_OLD_KEYS]) localStorage.removeItem(k);
   } catch {
     /* fine */
   }

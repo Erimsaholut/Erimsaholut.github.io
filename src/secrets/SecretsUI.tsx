@@ -183,7 +183,7 @@ export function SecretsPanel({ open, onClose, onReward }: { open: boolean; onClo
               <div className="mt-6 text-right">
                 {confirmReset ? (
                   <span className="text-xs text-muted">
-                    Forget all found secrets?{" "}
+                    Forget all found secrets and Night Shift endings?{" "}
                     <button className="text-amber underline" onClick={() => resetSecrets()}>
                       Yes, reset
                     </button>{" "}

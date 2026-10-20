@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { gameOverlay } from "../three/gameOverlay";
 import { unlock } from "../secrets/store";
+import { NIGHT_SHIFT_ENDINGS_KEY, NIGHT_SHIFT_SAVE_KEY } from "./keys";
 import { COMPANIONS, ENDINGS, ENDING_ORDER, ITEMS, MAX_HP, SCENES, START, ZERO_AFTER, clock, type Choice, type EndingId, type State } from "./story";
 
 /* BUZLIME: NIGHT SHIFT — the text adventure's screen. Progress and found endings stay in this browser. */
@@ -13,8 +14,8 @@ interface Save {
   log: Entry[];
 }
 
-const SAVE_KEY = "eo-nightshift-v2"; // v2: characters renamed (old saves used other flag ids)
-const ENDINGS_KEY = "eo-nightshift-endings";
+const SAVE_KEY = NIGHT_SHIFT_SAVE_KEY;
+const ENDINGS_KEY = NIGHT_SHIFT_ENDINGS_KEY;
 const CPS = 260; // typewriter speed, characters per second
 
 function read<T>(key: string, fallback: T): T {
