@@ -179,6 +179,15 @@ export function SecretsPanel({ open, onClose, onReward }: { open: boolean; onClo
               })}
             </ul>
 
+            {count < total && (
+              <p className="mt-6 rounded-2xl border border-line bg-raised/40 p-4 text-sm leading-relaxed text-muted">
+                Stuck on a secret you can't find? Reach out and I'll happily drop you a hint.{" "}
+                <a href="#contact" onClick={onClose} className="whitespace-nowrap font-medium text-amber underline-offset-2 hover:underline">
+                  Get in touch →
+                </a>
+              </p>
+            )}
+
             {count > 0 && (
               <div className="mt-6 text-right">
                 {confirmReset ? (
