@@ -182,7 +182,7 @@ export default function CloudGlobe({ dots, reduce, fill = false }: { dots: numbe
       depthWrite: false,
     });
 
-    const occluderMat = new THREE.MeshBasicMaterial({ color: "#0F110E", transparent: true, opacity: 0 });
+    const occluderMat = new THREE.MeshBasicMaterial({ color: "#131209", transparent: true, opacity: 0 });
     const rimMat = new THREE.ShaderMaterial({
       uniforms: { uOpacity: { value: 0 } },
       vertexShader: rimVert,

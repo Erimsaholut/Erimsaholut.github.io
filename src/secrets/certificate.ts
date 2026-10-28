@@ -11,10 +11,10 @@ export interface CertInfo {
 export const CERT_W = 1600;
 export const CERT_H = 1000;
 
-const C = { bg: "#0F110E", ink: "#ECE8DF", muted: "#A2A499", faint: "#6F7268", amber: "#FFB547" };
-const DISPLAY = '"Bricolage Grotesque Variable", system-ui, sans-serif';
-const SANS = '"Inter Variable", system-ui, sans-serif';
-const MONO = '"JetBrains Mono", ui-monospace, monospace';
+const C = { bg: "#131209", ink: "#ECE8DF", muted: "#A2A499", faint: "#6F7268", amber: "#FFB547" };
+const DISPLAY = '"Geist Variable", system-ui, sans-serif';
+const SANS = '"Geist Variable", system-ui, sans-serif';
+const MONO = '"Geist Mono Variable", ui-monospace, monospace';
 
 export function credentialId({ first, last, total }: CertInfo) {
   let h = 0x811c9dc5; // FNV-1a over the timestamps — the same progress always gives the same ID

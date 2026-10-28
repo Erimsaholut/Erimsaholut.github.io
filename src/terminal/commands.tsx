@@ -137,7 +137,7 @@ export const COMMANDS: Record<string, Command> = {
       ];
       print(
         <div key="nf" className="flex flex-col gap-4 sm:flex-row">
-          <pre className="text-amber leading-tight">{LOGO}</pre>
+          <pre className="text-amber">{LOGO}</pre>
           <div className="space-y-0.5">
             <p>
               <K>erimsah</K>@<K>torino</K>

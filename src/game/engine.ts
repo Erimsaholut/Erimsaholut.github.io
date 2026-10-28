@@ -220,7 +220,7 @@ export class Game {
   ) {
     this.renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: "high-performance" });
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, opts.lite ? 1.5 : 2));
-    this.renderer.setClearColor("#07080A");
+    this.renderer.setClearColor("#000000");
     this.scene.add(this.world);
     this.world.add(this.spin);
     this.world.rotation.x = this.tilt;

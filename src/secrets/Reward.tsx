@@ -4,6 +4,7 @@ import { SECRETS } from "./registry";
 import { useSecrets } from "./store";
 import { CERT_H, CERT_W, drawCertificate, duration, type CertInfo } from "./certificate";
 import { PROFILE } from "../data";
+import { Close, Download } from "../components/Icons";
 
 /* The prize for finding every secret: a personal certificate to download (and share). */
 
@@ -71,7 +72,7 @@ export default function Reward({ onClose }: { onClose: () => void }) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-[115] flex items-end justify-center bg-bg/75 backdrop-blur-sm sm:items-center sm:p-5"
+      className="fixed inset-0 z-[115] flex items-end justify-center bg-bg/75 backdrop-blur-sm sm:items-center sm:p-6"
       onClick={onClose}
       role="dialog"
       aria-modal="true"
@@ -83,20 +84,18 @@ export default function Reward({ onClose }: { onClose: () => void }) {
         exit={{ y: 30, opacity: 0 }}
         transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
         onClick={(e) => e.stopPropagation()}
-        className="max-h-[92svh] w-full max-w-3xl overflow-y-auto rounded-t-3xl border border-amber/30 bg-surface p-5 shadow-[0_40px_120px_-30px_rgba(255,181,71,0.35)] sm:rounded-3xl sm:p-8"
+        className="max-h-[92svh] w-full max-w-3xl overflow-y-auto rounded-t-3xl border border-amber/30 bg-surface p-6 shadow-[0_40px_120px_-30px_rgba(255,181,71,0.35)] sm:rounded-3xl sm:p-8"
       >
         <div className="flex items-start justify-between gap-4">
           <div>
             <p className="eyebrow">Reward unlocked</p>
             <h2 className="mt-2 font-display text-3xl font-semibold tracking-tight sm:text-4xl">You found all {SECRETS.length} secrets 🏆</h2>
-            <p className="mt-2 max-w-xl text-sm leading-relaxed text-muted">
+            <p className="mt-2 max-w-xl text-sm text-muted">
               It took you {duration(info.last - info.first)}. Here's your reward: an official (and totally unofficial) certificate. Add your name and download it.
             </p>
           </div>
-          <button ref={closeRef} onClick={onClose} aria-label="Close" className="shrink-0 rounded-lg border border-line p-2 text-muted transition hover:text-ink">
-            <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round">
-              <path d="M6 6l12 12M18 6 6 18" />
-            </svg>
+          <button ref={closeRef} onClick={onClose} aria-label="Close" className="shrink-0 rounded-lg border border-line p-2 text-muted transition-colors hover:bg-raised hover:text-ink active:scale-[0.98]">
+            <Close />
           </button>
         </div>
 
@@ -108,7 +107,7 @@ export default function Reward({ onClose }: { onClose: () => void }) {
           aria-label={`Certificate: ${name.trim() || "A Curious Visitor"}, Certified Secret Hunter`}
         />
 
-        <div className="mt-5 flex flex-col gap-3 sm:flex-row">
+        <div className="mt-6 flex flex-col gap-3 sm:flex-row">
           <label className="flex-1">
             <span className="sr-only">Name on the certificate</span>
             <input
@@ -116,22 +115,20 @@ export default function Reward({ onClose }: { onClose: () => void }) {
               onChange={(e) => setName(e.target.value.slice(0, 40))}
               placeholder="Your name on the certificate"
               autoComplete="name"
-              className="w-full rounded-md border border-line bg-bg px-4 py-3 text-sm text-ink outline-none transition placeholder:text-faint focus:border-amber/60"
+              className="w-full rounded-md border border-line bg-bg px-3 py-2 text-base text-ink transition-colors placeholder:text-faint focus:border-amber/60"
             />
           </label>
           <button
             onClick={download}
             disabled={saving}
-            className="inline-flex items-center justify-center gap-2 rounded-md bg-amber px-5 py-3 text-sm font-semibold text-bg transition hover:bg-amber/90 disabled:opacity-60"
+            className="inline-flex items-center justify-center gap-2 rounded-md bg-amber px-3 py-2 text-base font-semibold text-bg transition-colors hover:bg-amber/90 active:scale-[0.98] disabled:opacity-60"
           >
-            <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-              <path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 20h14" />
-            </svg>
+            <Download />
             {saving ? "Preparing…" : "Download PNG"}
           </button>
         </div>
 
-        <p className="mt-5 text-sm text-muted">
+        <p className="mt-6 text-sm text-muted">
           Made it this far? I'd love to hear how —{" "}
           <a className="text-amber underline underline-offset-2 hover:text-ink" href={`mailto:${PROFILE.email}?subject=${encodeURIComponent("Secret Hunter")}`}>
             email me

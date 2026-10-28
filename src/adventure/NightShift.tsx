@@ -150,7 +150,7 @@ export default function NightShift({ onClose }: { onClose: () => void }) {
     let to = c.run?.(s) || c.to;
     if (s.hp <= 0) to = "end_bitten";
     if (s.hp < state.hp && flash.current && !reduce)
-      flash.current.animate([{ opacity: 0.55 }, { opacity: 0 }], { duration: 650, easing: "ease-out" });
+      flash.current.animate([{ opacity: 0.55 }, { opacity: 0 }], { duration: 650, easing: "cubic-bezier(0.22, 1, 0.36, 1)" });
     const pick: Entry = { k: "pick", text: c.label };
     if (to === scene) {
       setState(s);
@@ -205,20 +205,19 @@ export default function NightShift({ onClose }: { onClose: () => void }) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      transition={{ duration: 0.35 }}
-      className="fixed inset-0 z-[100] flex flex-col overflow-hidden bg-[#0A0807] text-ink outline-none"
+      transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+      className="fixed inset-0 z-[100] flex flex-col overflow-hidden bg-[#000000] text-ink outline-none"
       role="dialog"
       aria-modal="true"
       aria-label="Buzlime: Night Shift"
     >
       {/* Emergency lighting, scanlines and the damage flash. */}
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-[60vh] animate-[alarm_3.2s_ease-in-out_infinite] bg-[radial-gradient(ellipse_70%_60%_at_50%_0%,rgba(255,60,40,0.22),transparent_70%)]" aria-hidden />
-      <div className="pointer-events-none absolute inset-0 bg-[repeating-linear-gradient(0deg,rgba(255,255,255,0.025)_0_1px,transparent_1px_3px)]" aria-hidden />
+      <div className="pointer-events-none absolute inset-0 animate-alarm bg-[#FF3C28]/5" aria-hidden />
       <div ref={flash} className="pointer-events-none absolute inset-0 bg-[#FF2A1A] opacity-0" aria-hidden />
 
       <header className="relative z-10 flex items-center gap-3 border-b border-white/10 px-4 py-3 font-mono text-xs sm:px-6">
         <span className="hidden text-[#FF6A55] sm:inline">● REC</span>
-        <span className="whitespace-nowrap tracking-[0.2em] text-muted">
+        <span className="whitespace-nowrap tracking-widest text-muted">
           <span className="hidden sm:inline">
             BUZLIME<span className="text-[#FF6A55]">:</span>{" "}
           </span>
@@ -247,7 +246,7 @@ export default function NightShift({ onClose }: { onClose: () => void }) {
       </header>
 
       {started && (state.items.length > 0 || state.flags.some((f) => COMPANIONS[f])) && (
-        <div className="relative z-10 flex flex-wrap gap-1.5 border-b border-white/5 px-4 py-2 font-mono text-[11px] sm:px-6">
+        <div className="relative z-10 flex flex-wrap gap-2 border-b border-white/5 px-4 py-2 font-mono text-xs sm:px-6">
           {state.items.map((i) => (
             <span key={i} className="rounded border border-white/10 bg-white/[0.03] px-2 py-0.5 text-ink/80">
               {ITEMS[i]}
@@ -271,7 +270,7 @@ export default function NightShift({ onClose }: { onClose: () => void }) {
           className="relative z-10 flex-1 overflow-y-auto overscroll-contain px-4 pb-10 pt-6 sm:px-6"
           onClick={() => typing && setShown(Infinity)}
         >
-          <div className="mx-auto max-w-2xl space-y-5">
+          <div className="mx-auto max-w-2xl space-y-6">
             {log.map((e, i) => {
               const latest = e === lastScene;
               if (e.k === "pick")
@@ -282,7 +281,7 @@ export default function NightShift({ onClose }: { onClose: () => void }) {
                 );
               if (e.k === "say")
                 return (
-                  <p key={i} className="font-mono text-[13px] italic text-sage/90">
+                  <p key={i} className="font-mono text-xs text-sage/90">
                     {e.text}
                   </p>
                 );
@@ -290,7 +289,7 @@ export default function NightShift({ onClose }: { onClose: () => void }) {
             })}
 
             {!typing && !ending && (
-              <motion.ol initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }} className="space-y-2 pt-2">
+              <motion.ol initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }} className="space-y-2 pt-2">
                 {choices.map((c, i) => {
                   const locked = !!c.need && !c.need(state);
                   return (
@@ -302,7 +301,7 @@ export default function NightShift({ onClose }: { onClose: () => void }) {
                           choose(c);
                         }}
                         className={`group flex w-full items-start gap-3 rounded-xl border px-4 py-3 text-left font-mono text-sm transition ${
-                          locked ? "cursor-not-allowed border-white/5 text-faint" : "border-white/10 bg-white/[0.02] text-ink hover:border-amber/50 hover:bg-amber/[0.06] active:scale-[0.99]"
+                          locked ? "cursor-not-allowed border-white/5 text-faint" : "border-white/10 bg-white/[0.02] text-ink hover:border-amber/50 hover:bg-amber/[0.06] active:scale-[0.98]"
                         }`}
                       >
                         <span className={locked ? "text-faint" : "text-amber"}>{locked ? "🔒" : `${i + 1}.`}</span>
@@ -327,14 +326,14 @@ export default function NightShift({ onClose }: { onClose: () => void }) {
 
 function Passage({ text, dim }: { text: string; dim: boolean }) {
   return (
-    <div className={`space-y-3 text-[15.5px] leading-relaxed sm:text-base ${dim ? "text-ink/45" : "text-ink/90"}`}>
+    <div className={`space-y-3 text-base ${dim ? "text-ink/45" : "text-ink/90"}`}>
       {text.split("\n\n").map((p, i) => {
         // "LABEL — rest" lines (camera feeds, alerts) get a highlighted label.
         const m = p.match(/^([A-Z0-9][A-Z0-9 :.°−-]{3,}) — ([\s\S]*)$/);
         if (m)
           return (
             <p key={i}>
-              <span className="font-mono text-[13px] tracking-wider text-[#FF8A75]">{m[1]}</span> — {m[2]}
+              <span className="font-mono text-xs tracking-wider text-[#FF8A75]">{m[1]}</span> — {m[2]}
             </p>
           );
         if (/^deploy /.test(p.trim()) || /^You type:/.test(p))
@@ -358,24 +357,24 @@ function Passage({ text, dim }: { text: string; dim: boolean }) {
 function TitleScreen({ saved, endings, onStart }: { saved: Save | null; endings: EndingId[]; onStart: (fromSave: boolean) => void }) {
   return (
     <div className="relative z-10 flex flex-1 flex-col items-center justify-center overflow-y-auto px-6 py-10 text-center">
-      <p className="font-mono text-[11px] uppercase tracking-[0.35em] text-[#FF6A55]">📟 Incoming page · 02:47</p>
-      <h1 className="mt-5 font-display text-[clamp(2.8rem,11vw,6rem)] font-semibold leading-[0.9] tracking-tight">
+      <p className="font-mono text-xs uppercase tracking-widest text-[#FF6A55]">📟 Incoming page · 02:47</p>
+      <h1 className="mt-6 text-5xl font-semibold tracking-tight sm:text-7xl lg:text-8xl">
         BUZLIME
         <span className="block text-[#FF5A4F] [text-shadow:0_0_40px_rgba(255,70,50,0.45)]">NIGHT SHIFT</span>
       </h1>
-      <p className="mt-6 max-w-md text-[15px] leading-relaxed text-muted">
+      <p className="mt-6 max-w-md text-sm text-muted">
         You're on call at the Buzlime warehouse. The update is stuck at 63%. Something is wrong outside. Your choices shape the story — and some endings
         need a little luck.
       </p>
-      <div className="mt-9 flex flex-col items-center gap-3 sm:flex-row">
+      <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row">
         {saved && (
-          <button onClick={() => onStart(true)} className="rounded-md bg-amber px-6 py-3 font-mono text-sm font-semibold text-bg transition hover:bg-amber/90">
+          <button onClick={() => onStart(true)} className="rounded-md bg-amber px-3 py-2 text-base font-semibold text-bg transition-colors hover:bg-amber/90 active:scale-[0.98]">
             Continue · {clock(saved.state.minutes)}, {LOCATIONS[saved.scene] ?? "the warehouse"}
           </button>
         )}
         <button
           onClick={() => onStart(false)}
-          className={`rounded-md px-6 py-3 font-mono text-sm font-semibold transition ${
+          className={`rounded-md px-3 py-2 text-base font-semibold transition-colors active:scale-[0.98] ${
             saved ? "border border-white/15 text-ink hover:border-white/30" : "bg-[#FF5A4F] text-[#120807] hover:bg-[#FF6F63]"
           }`}
         >
@@ -383,9 +382,9 @@ function TitleScreen({ saved, endings, onStart }: { saved: Save | null; endings:
         </button>
       </div>
       {endings.length >= ZERO_AFTER && !endings.includes("zero") && (
-        <p className="mt-8 font-mono text-[11px] text-[#FF8A75]">📼 There's something new on the security tapes tonight.</p>
+        <p className="mt-8 font-mono text-xs text-[#FF8A75]">📼 There's something new on the security tapes tonight.</p>
       )}
-      <p className={`${endings.length >= ZERO_AFTER && !endings.includes("zero") ? "mt-2" : "mt-8"} font-mono text-[11px] text-faint`}>
+      <p className={`${endings.length >= ZERO_AFTER && !endings.includes("zero") ? "mt-2" : "mt-8"} font-mono text-xs text-faint`}>
         Endings found: {endings.length}/{ENDING_ORDER.length} · 1–9 to choose · esc to leave
       </p>
     </div>
@@ -402,9 +401,9 @@ function EndingCard({ id, endings, onAgain, onClose }: { id: EndingId; endings: 
       className={`mt-4 rounded-2xl border p-6 text-center ${id === "bad" ? "border-[#FF5A4F]/30 bg-[#FF5A4F]/[0.06]" : "border-amber/30 bg-amber/[0.06]"}`}
     >
       <p className="text-4xl">{e.emoji}</p>
-      <p className="mt-3 font-mono text-[11px] uppercase tracking-[0.3em] text-muted">The end · {e.kind}</p>
+      <p className="mt-3 font-mono text-xs uppercase tracking-widest text-muted">The end · {e.kind}</p>
       <h2 className="mt-2 font-display text-3xl font-semibold tracking-tight">{e.title}</h2>
-      <ul className="mx-auto mt-5 grid max-w-md grid-cols-1 gap-1.5 text-left font-mono text-xs sm:grid-cols-2">
+      <ul className="mx-auto mt-6 grid max-w-md grid-cols-1 gap-2 text-left font-mono text-xs sm:grid-cols-2">
         {ENDING_ORDER.map((k) => {
           const got = endings.includes(k);
           return (
@@ -414,15 +413,15 @@ function EndingCard({ id, endings, onAgain, onClose }: { id: EndingId; endings: 
           );
         })}
       </ul>
-      <p className="mt-4 font-mono text-[11px] text-faint">
+      <p className="mt-4 font-mono text-xs text-faint">
         Endings found: {endings.length}/{ENDING_ORDER.length}
         {!endings.includes("best") && id !== "best" ? " · the best ending brings everyone home" : ""}
       </p>
       <div className="mt-6 flex flex-col justify-center gap-2 sm:flex-row">
-        <button onClick={onAgain} className="rounded-md bg-amber px-5 py-2.5 font-mono text-sm font-semibold text-bg transition hover:bg-amber/90">
+        <button onClick={onAgain} className="rounded-md bg-amber px-3 py-2 text-base font-semibold text-bg transition-colors hover:bg-amber/90 active:scale-[0.98]">
           Play again
         </button>
-        <button onClick={onClose} className="rounded-md border border-white/15 px-5 py-2.5 font-mono text-sm text-ink transition hover:border-white/30">
+        <button onClick={onClose} className="rounded-md border border-white/15 px-3 py-2 text-base font-semibold text-ink transition-colors hover:border-white/30 active:scale-[0.98]">
           Back to the site
         </button>
       </div>

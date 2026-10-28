@@ -60,14 +60,14 @@ function Card({ children }: { children: ReactNode }) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="pointer-events-auto absolute inset-0 z-20 flex items-center justify-center bg-[#07080A]/55 p-5 backdrop-blur-[2px]"
+      className="pointer-events-auto absolute inset-0 z-20 flex items-center justify-center bg-[#000000]/55 p-6 backdrop-blur-[2px]"
     >
       <motion.div
         initial={{ opacity: 0, y: 24, scale: 0.97 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         exit={{ opacity: 0, y: 12 }}
         transition={{ duration: 0.5, ease: EASE }}
-        className="max-h-[calc(100svh-32px)] w-full max-w-md overflow-y-auto rounded-3xl border border-line bg-surface/90 p-6 shadow-[0_40px_120px_-30px_rgba(0,0,0,0.8)] backdrop-blur-xl sm:p-7 md:p-9"
+        className="max-h-[calc(100svh-32px)] w-full max-w-md overflow-y-auto rounded-3xl border border-line bg-surface/90 p-6 shadow-[0_40px_120px_-30px_rgba(0,0,0,0.8)] backdrop-blur-xl sm:p-8 md:p-8"
       >
         {children}
       </motion.div>
@@ -90,10 +90,10 @@ function PowerUpGuide() {
               <div className="min-w-0">
                 <p className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-sm font-semibold text-ink">
                   {info.name}
-                  <span className="rounded bg-amber/15 px-1.5 py-0.5 font-mono text-[10px] font-medium text-amber">{info.cost} credits</span>
-                  <span className="hidden font-mono text-[10px] font-normal text-faint [@media(pointer:fine)]:inline">key {info.key}</span>
+                  <span className="rounded bg-amber/15 px-2 py-0.5 font-mono text-xs font-medium text-amber">{info.cost} credits</span>
+                  <span className="hidden font-mono text-xs font-normal text-faint [@media(pointer:fine)]:inline">key {info.key}</span>
                 </p>
-                <p className="mt-1 text-[13px] leading-snug text-ink/85">{info.desc}</p>
+                <p className="mt-1 text-xs text-ink/85">{info.desc}</p>
                 <p className="mt-1 text-xs text-muted">{info.how}</p>
               </div>
             </li>
@@ -212,8 +212,8 @@ export default function RegionDefender({ onClose, lite }: { onClose: () => void;
       aria-label="Region Defender — mini game"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
-      className="fixed inset-0 z-[100] select-none overflow-hidden bg-[#07080A] font-sans text-ink outline-none"
+      transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+      className="fixed inset-0 z-[100] select-none overflow-hidden bg-[#000000] font-sans text-ink outline-none"
     >
       <div ref={host} className="absolute inset-0" />
 
@@ -222,7 +222,7 @@ export default function RegionDefender({ onClose, lite }: { onClose: () => void;
           <p className="eyebrow">Region Defender</p>
           <h2 className="mt-3 font-display text-3xl font-semibold">WebGL isn't available</h2>
           <p className="mt-3 text-muted">This browser can't run the 3D game. Try a recent version of Chrome, Safari, Firefox or Edge.</p>
-          <button onClick={onClose} className="mt-8 rounded-md bg-amber px-5 py-3 text-sm font-semibold text-bg">
+          <button onClick={onClose} className="mt-8 rounded-md bg-amber px-4 py-3 text-sm font-semibold text-bg">
             Back to the site
           </button>
         </Card>
@@ -231,11 +231,11 @@ export default function RegionDefender({ onClose, lite }: { onClose: () => void;
       {hud && (
         <div className="pointer-events-none absolute inset-0">
           {/* Top bar */}
-          <div className="absolute inset-x-0 top-0 flex items-start justify-between gap-3 p-3 pt-[max(12px,env(safe-area-inset-top))] sm:p-5">
+          <div className="absolute inset-x-0 top-0 flex items-start justify-between gap-3 p-3 pt-[max(12px,env(safe-area-inset-top))] sm:p-6">
             <div className="min-w-0">
-              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-amber">Region Defender</p>
-              <p className="font-display text-3xl font-semibold leading-none tabular-nums sm:text-4xl">{hud.score.toLocaleString()}</p>
-              <p className="mt-1.5 font-mono text-[11px] text-muted">
+              <p className="font-mono text-xs uppercase tracking-widest text-amber">Region Defender</p>
+              <p className="font-display text-3xl font-semibold tabular-nums sm:text-4xl">{hud.score.toLocaleString()}</p>
+              <p className="mt-2 font-mono text-xs text-muted">
                 Wave {Math.max(1, hud.wave)} · {hud.blocked} blocked
               </p>
               <AnimatePresence>
@@ -268,17 +268,17 @@ export default function RegionDefender({ onClose, lite }: { onClose: () => void;
                 </IconButton>
               </div>
               <div className="rounded-xl border border-line bg-surface/70 px-3 py-2 backdrop-blur">
-                <p className="text-right font-mono text-[10px] uppercase tracking-wider text-muted">
+                <p className="text-right font-mono text-xs uppercase tracking-wider text-muted">
                   <span className={down >= MAX_DOWN - 1 ? "text-[#FF5A4F]" : "text-ink"}>{hud.online}</span>/{hud.total} regions online
                 </p>
-                <div className="mt-1.5 flex justify-end gap-1">
+                <div className="mt-2 flex justify-end gap-1">
                   {hud.hubs.map((h) => (
                     <span
                       key={h.name}
                       title={h.name}
                       className={`h-1.5 w-2.5 rounded-full sm:w-3 ${
                         !h.online ? "bg-line" : h.hp > 60 ? "bg-sage" : h.hp > 30 ? "bg-amber" : "bg-[#FF5A4F]"
-                      } ${h.danger ? "animate-pulse" : ""} ${h.shield ? "ring-1 ring-[#7FE7FF]" : ""}`}
+                      } ${h.danger ? "animate-skeleton" : ""} ${h.shield ? "ring-1 ring-[#7FE7FF]" : ""}`}
                     />
                   ))}
                 </div>
@@ -289,8 +289,8 @@ export default function RegionDefender({ onClose, lite }: { onClose: () => void;
           {/* Region list (large screens) */}
           {hud.phase !== "intro" && (
             <div className="absolute bottom-6 left-6 hidden w-56 rounded-2xl border border-line bg-surface/70 p-4 backdrop-blur lg:block">
-              <p className="mb-3 font-mono text-[10px] uppercase tracking-wider text-faint">Regions</p>
-              <ul className="space-y-1.5">
+              <p className="mb-3 font-mono text-xs uppercase tracking-wider text-faint">Regions</p>
+              <ul className="space-y-2">
                 {hud.hubs.map((h) => (
                   <li key={h.name} className="flex items-center gap-2 text-xs">
                     <span className={`w-24 truncate ${h.online ? "text-ink/90" : "text-faint line-through"}`}>{h.name}</span>
@@ -300,7 +300,7 @@ export default function RegionDefender({ onClose, lite }: { onClose: () => void;
                         style={{ width: `${h.online ? h.hp : 0}%` }}
                       />
                     </span>
-                    {h.shield > 0 && <span className="font-mono text-[10px] text-[#7FE7FF]">{h.shield}</span>}
+                    {h.shield > 0 && <span className="font-mono text-xs text-[#7FE7FF]">{h.shield}</span>}
                     {h.danger && <span className="h-1.5 w-1.5 animate-ping rounded-full bg-[#FF5A4F]" />}
                   </li>
                 ))}
@@ -344,7 +344,7 @@ export default function RegionDefender({ onClose, lite }: { onClose: () => void;
                     initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0 }}
-                    className="pointer-events-auto rounded-full border border-[#7FE7FF]/40 bg-bg/80 px-4 py-1.5 text-xs text-[#7FE7FF] backdrop-blur"
+                    className="pointer-events-auto rounded-full border border-[#7FE7FF]/40 bg-bg/80 px-4 py-2 text-xs text-[#7FE7FF] backdrop-blur"
                   >
                     Tap a region to deploy {ABILITIES[hud.targeting].name} ·{" "}
                     <button className="underline" onClick={() => g()?.cancelTargeting()}>
@@ -353,15 +353,15 @@ export default function RegionDefender({ onClose, lite }: { onClose: () => void;
                   </motion.p>
                 )}
               </AnimatePresence>
-              <div className="pointer-events-auto flex items-stretch gap-1.5 rounded-2xl border border-line bg-surface/80 p-1.5 backdrop-blur-xl sm:gap-2 sm:p-2">
+              <div className="pointer-events-auto flex items-stretch gap-2 rounded-2xl border border-line bg-surface/80 p-2 backdrop-blur-xl sm:gap-2 sm:p-2">
                 <motion.div
                   key={hud.denied}
                   animate={hud.denied ? { x: [0, -6, 6, -4, 4, 0] } : undefined}
-                  transition={{ duration: 0.35 }}
-                  className="flex min-w-[52px] flex-col items-center justify-center px-1.5 sm:min-w-[64px] sm:px-2"
+                  transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                  className="flex min-w-[52px] flex-col items-center justify-center px-2 sm:min-w-[64px] sm:px-2"
                 >
-                  <span className="font-display text-2xl font-semibold leading-none text-amber tabular-nums">{hud.credits}</span>
-                  <span className="mt-1 font-mono text-[9px] uppercase tracking-wider text-faint">credits</span>
+                  <span className="font-display text-2xl font-semibold text-amber tabular-nums">{hud.credits}</span>
+                  <span className="mt-1 font-mono text-xs uppercase tracking-wider text-faint">credits</span>
                 </motion.div>
                 {ORDER.map((a) => {
                   const info = ABILITIES[a];
@@ -373,7 +373,7 @@ export default function RegionDefender({ onClose, lite }: { onClose: () => void;
                       key={a}
                       onClick={() => g()?.useAbility(a)}
                       title={info.desc}
-                      className={`relative flex w-[78px] flex-col items-center gap-1 overflow-hidden rounded-xl border px-1.5 py-2 text-center transition sm:w-[104px] sm:px-2 ${
+                      className={`relative flex w-[78px] flex-col items-center gap-1 overflow-hidden rounded-xl border px-2 py-2 text-center transition sm:w-[104px] sm:px-2 ${
                         active
                           ? "border-[#7FE7FF] bg-[#7FE7FF]/10 text-[#7FE7FF]"
                           : ready
@@ -383,8 +383,8 @@ export default function RegionDefender({ onClose, lite }: { onClose: () => void;
                     >
                       {cd > 0 && <span className="absolute inset-x-0 bottom-0 bg-ink/10" style={{ height: `${cd * 100}%` }} />}
                       <Icon name={a} />
-                      <span className="text-[11px] font-medium leading-tight sm:text-xs">{info.name}</span>
-                      <span className="font-mono text-[10px] text-amber/90">
+                      <span className="text-xs font-medium sm:text-xs">{info.name}</span>
+                      <span className="font-mono text-xs text-amber/90">
                         {info.cost}
                         <span className="ml-1 hidden text-faint [@media(pointer:fine)]:inline">[{info.key}]</span>
                       </span>
@@ -406,35 +406,35 @@ export default function RegionDefender({ onClose, lite }: { onClose: () => void;
           <AnimatePresence>
             {hud.phase === "intro" && (
               <Card key="intro">
-                <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-sage">Easter egg unlocked</p>
+                <p className="font-mono text-xs uppercase tracking-widest text-sage">Easter egg unlocked</p>
                 <h2 className="mt-3 font-display text-4xl font-semibold tracking-tight">
                   Region <span className="text-amber">Defender</span>
                 </h2>
                 <p className="mt-3 text-muted">DDoS traffic is hitting the global network. Keep the regions online as long as you can.</p>
-                <ul className="mt-6 space-y-2.5 text-sm text-ink/90">
+                <ul className="mt-6 space-y-3 text-sm text-ink/90">
                   <li className="flex gap-3">
-                    <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-[#FF5A4F]" />
+                    <span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-[#FF5A4F]" />
                     Tap or click incoming packets to block them. Purple ones (from wave 4) take 3 hits.
                   </li>
                   <li className="flex gap-3">
-                    <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-sky" />
+                    <span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-sky" />
                     Drag to rotate the globe — attacks can come from the far side.
                   </li>
                   <li className="flex gap-3">
-                    <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-amber" />
+                    <span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-amber" />
                     Earn credits and spend them on the power-ups below.
                   </li>
                   <li className="flex gap-3">
-                    <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-line" />
+                    <span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-line" />
                     Lose {MAX_DOWN} regions and the network goes down.
                   </li>
                 </ul>
-                <p className="mt-7 font-mono text-[10px] uppercase tracking-[0.2em] text-faint">Power-ups</p>
+                <p className="mt-6 font-mono text-xs uppercase tracking-widest text-faint">Power-ups</p>
                 <div className="mt-3">
                   <PowerUpGuide />
                 </div>
                 {/* Pinned to the bottom of the card so Start is always reachable on small screens. */}
-                <div className="sticky -bottom-6 mt-4 flex items-center justify-between gap-4 bg-gradient-to-t from-surface via-surface to-surface/0 pb-1 pt-6 sm:-bottom-7 md:-bottom-9">
+                <div className="sticky -bottom-6 mt-4 flex items-center justify-between gap-4 bg-surface pb-1 pt-6 sm:-bottom-8 md:-bottom-8">
                   <button
                     onClick={() => g()?.start()}
                     className="rounded-md bg-amber px-6 py-3 text-sm font-semibold text-bg shadow-[0_10px_40px_-10px_rgba(255,181,71,0.6)] transition hover:bg-amber/90"
@@ -452,10 +452,10 @@ export default function RegionDefender({ onClose, lite }: { onClose: () => void;
                 <h2 className="mt-3 font-display text-3xl font-semibold">Traffic on hold</h2>
                 <p className="mt-2 text-muted">Wave {hud.wave} · {hud.score.toLocaleString()} points</p>
                 <div className="mt-8 flex gap-3">
-                  <button onClick={() => g()?.resume()} className="rounded-md bg-amber px-5 py-3 text-sm font-semibold text-bg">
+                  <button onClick={() => g()?.resume()} className="rounded-md bg-amber px-4 py-3 text-sm font-semibold text-bg">
                     Resume
                   </button>
-                  <button onClick={onClose} className="rounded-md border border-line px-5 py-3 text-sm">
+                  <button onClick={onClose} className="rounded-md border border-line px-4 py-3 text-sm">
                     Back to the site
                   </button>
                 </div>
@@ -467,10 +467,10 @@ export default function RegionDefender({ onClose, lite }: { onClose: () => void;
                 <p className="eyebrow">How power-ups work</p>
                 <h2 className="mt-3 font-display text-3xl font-semibold">Power-ups</h2>
                 <p className="mt-2 text-sm text-muted">The game is paused while you read.</p>
-                <div className="mt-5">
+                <div className="mt-6">
                   <PowerUpGuide />
                 </div>
-                <button onClick={closeHelp} className="mt-7 rounded-md bg-amber px-5 py-3 text-sm font-semibold text-bg">
+                <button onClick={closeHelp} className="mt-6 rounded-md bg-amber px-4 py-3 text-sm font-semibold text-bg">
                   {helpRef.current.resumeAfter ? "Got it — resume" : "Got it"}
                 </button>
               </Card>
@@ -478,24 +478,24 @@ export default function RegionDefender({ onClose, lite }: { onClose: () => void;
 
             {hud.phase === "over" && (
               <Card key="over">
-                <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-[#FF5A4F]">Network down</p>
+                <p className="font-mono text-xs uppercase tracking-widest text-[#FF5A4F]">Network down</p>
                 <h2 className="mt-3 font-display text-4xl font-semibold tabular-nums">{hud.score.toLocaleString()}</h2>
                 <p className="mt-1 text-sm text-muted">{hud.newBest ? "New best score!" : `Best: ${hud.best.toLocaleString()}`}</p>
                 <dl className="mt-6 grid grid-cols-2 gap-3">
                   <div className="rounded-xl border border-line bg-raised px-4 py-3">
-                    <dt className="font-mono text-[10px] uppercase tracking-wider text-faint">Waves survived</dt>
+                    <dt className="font-mono text-xs uppercase tracking-wider text-faint">Waves survived</dt>
                     <dd className="mt-1 font-display text-2xl">{Math.max(0, hud.wave - 1)}</dd>
                   </div>
                   <div className="rounded-xl border border-line bg-raised px-4 py-3">
-                    <dt className="font-mono text-[10px] uppercase tracking-wider text-faint">Threats blocked</dt>
+                    <dt className="font-mono text-xs uppercase tracking-wider text-faint">Threats blocked</dt>
                     <dd className="mt-1 font-display text-2xl">{hud.blocked}</dd>
                   </div>
                 </dl>
                 <div className="mt-8 flex gap-3">
-                  <button onClick={() => g()?.start()} className="rounded-md bg-amber px-5 py-3 text-sm font-semibold text-bg">
+                  <button onClick={() => g()?.start()} className="rounded-md bg-amber px-4 py-3 text-sm font-semibold text-bg">
                     Play again
                   </button>
-                  <button onClick={onClose} className="rounded-md border border-line px-5 py-3 text-sm">
+                  <button onClick={onClose} className="rounded-md border border-line px-4 py-3 text-sm">
                     Back to the site
                   </button>
                 </div>

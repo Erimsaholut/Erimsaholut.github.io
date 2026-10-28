@@ -27,7 +27,7 @@ function drawFace() {
   const ctx = c.getContext("2d")!;
   const g = ctx.createRadialGradient(512, 430, 40, 512, 512, 512);
   g.addColorStop(0, "#2A2F24");
-  g.addColorStop(1, "#0F110E");
+  g.addColorStop(1, "#131209");
   ctx.fillStyle = g;
   ctx.fillRect(0, 0, 1024, 1024);
 
@@ -54,7 +54,7 @@ function drawFace() {
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
   ctx.fillStyle = "#ECE8DF";
-  ctx.font = '600 50px "Bricolage Grotesque Variable", sans-serif';
+  ctx.font = '600 50px "Geist Variable", sans-serif';
   arcText(ctx, "CERTIFIED", 432, true, 0.11);
   arcText(ctx, "CLOUD PRACTITIONER", 432, false, 0.085);
 
@@ -71,10 +71,10 @@ function drawFace() {
   ctx.fill();
 
   ctx.fillStyle = "#FFB547";
-  ctx.font = '500 128px "JetBrains Mono", monospace';
+  ctx.font = '500 128px "Geist Mono Variable", monospace';
   ctx.fillText("CLF-C02", 512, 560);
   ctx.fillStyle = "#A2A499";
-  ctx.font = '500 40px "JetBrains Mono", monospace';
+  ctx.font = '500 40px "Geist Mono Variable", monospace';
   ctx.fillText("FOUNDATIONAL", 512, 668);
 
   const tex = new THREE.CanvasTexture(c);
@@ -174,8 +174,8 @@ export default function CertCoin({ reduce }: { reduce: boolean }) {
   useEffect(() => {
     let alive = true;
     Promise.all([
-      document.fonts.load('600 50px "Bricolage Grotesque Variable"'),
-      document.fonts.load('500 128px "JetBrains Mono"'),
+      document.fonts.load('600 50px "Geist Variable"'),
+      document.fonts.load('500 128px "Geist Mono Variable"'),
     ])
       .catch(() => undefined)
       .then(() => alive && setFace(drawFace()));

@@ -9,45 +9,7 @@ export function ScrollProgress() {
   return <motion.div style={{ scaleX }} className="fixed inset-x-0 top-0 z-[60] h-[2px] origin-left bg-amber" aria-hidden />;
 }
 
-/** Soft amber light that trails the mouse cursor. */
-export function CursorGlow() {
-  const ref = useRef<HTMLDivElement>(null);
-  const reduce = useReducedMotion();
-  useEffect(() => {
-    if (reduce || !window.matchMedia("(pointer: fine)").matches) return;
-    const el = ref.current!;
-    const target = { x: innerWidth / 2, y: innerHeight / 3 };
-    const pos = { ...target };
-    let raf = 0;
-    const move = (e: PointerEvent) => {
-      target.x = e.clientX;
-      target.y = e.clientY;
-      el.style.opacity = "1";
-    };
-    const loop = () => {
-      pos.x += (target.x - pos.x) * 0.12;
-      pos.y += (target.y - pos.y) * 0.12;
-      el.style.transform = `translate3d(${pos.x - 300}px, ${pos.y - 300}px, 0)`;
-      raf = requestAnimationFrame(loop);
-    };
-    window.addEventListener("pointermove", move, { passive: true });
-    raf = requestAnimationFrame(loop);
-    return () => {
-      window.removeEventListener("pointermove", move);
-      cancelAnimationFrame(raf);
-    };
-  }, [reduce]);
-  return (
-    <div
-      ref={ref}
-      className="pointer-events-none fixed left-0 top-0 z-[1] h-[600px] w-[600px] rounded-full opacity-0 transition-opacity duration-700"
-      style={{ background: "radial-gradient(circle, rgba(255,181,71,0.07), transparent 60%)" }}
-      aria-hidden
-    />
-  );
-}
-
-/** 3D tilt toward the pointer with a moving highlight. Mouse only. */
+/** 3D tilt toward the pointer with a soft highlight. Mouse only. */
 export function TiltCard({ children, className = "" }: { children: ReactNode; className?: string }) {
   const ref = useRef<HTMLDivElement>(null);
   const reduce = useReducedMotion();
@@ -59,8 +21,6 @@ export function TiltCard({ children, className = "" }: { children: ReactNode; cl
     const px = (e.clientX - r.left) / r.width;
     const py = (e.clientY - r.top) / r.height;
     el.style.transform = `perspective(1100px) rotateX(${((0.5 - py) * 9).toFixed(2)}deg) rotateY(${((px - 0.5) * 11).toFixed(2)}deg) scale(1.015)`;
-    el.style.setProperty("--gx", `${(px * 100).toFixed(1)}%`);
-    el.style.setProperty("--gy", `${(py * 100).toFixed(1)}%`);
   };
   const onLeave = () => {
     if (ref.current) ref.current.style.transform = "";
@@ -71,12 +31,11 @@ export function TiltCard({ children, className = "" }: { children: ReactNode; cl
       ref={ref}
       onPointerMove={onMove}
       onPointerLeave={onLeave}
-      className={`group/tilt relative md:h-full transition-transform duration-300 ease-out [@media(pointer:fine)]:will-change-transform ${className}`}
+      className={`group/tilt relative md:h-full transition-transform duration-500 [@media(pointer:fine)]:will-change-transform ${className}`}
     >
       {children}
       <div
-        className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-300 [@media(hover:hover)]:group-hover/tilt:opacity-100"
-        style={{ background: "radial-gradient(520px circle at var(--gx, 50%) var(--gy, 50%), rgba(255,181,71,0.13), transparent 42%)" }}
+        className="pointer-events-none absolute inset-0 rounded-2xl bg-amber/5 opacity-0 transition-opacity duration-300 [@media(hover:hover)]:group-hover/tilt:opacity-100"
         aria-hidden
       />
     </div>

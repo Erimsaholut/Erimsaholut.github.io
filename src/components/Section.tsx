@@ -7,7 +7,7 @@ export function Reveal({ children, delay = 0, className = "" }: { children: Reac
   return (
     <motion.div
       className={className}
-      initial={{ opacity: 0, y: 24 }}
+      initial={{ opacity: 0, y: 32 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-60px" }}
       transition={{ duration: 0.75, delay, ease: EASE }}
@@ -27,13 +27,13 @@ interface Props {
 
 export default function Section({ id, index, label, title, children }: Props) {
   return (
-    <section id={id} className="scroll-mt-20 border-t border-line py-20 md:py-28">
-      <div className="mx-auto max-w-6xl px-5 md:px-8">
+    <section id={id} className="scroll-mt-20 border-t border-line py-20 md:py-24">
+      <div className="mx-auto max-w-6xl px-4 md:px-8">
         <Reveal className="mb-12 md:mb-16 grid gap-4 md:grid-cols-12 md:items-end">
           <p className="eyebrow md:col-span-4">
             <span className="text-faint">{index}</span> / {label}
           </p>
-          <h2 className="md:col-span-8 font-display text-4xl md:text-5xl font-semibold tracking-tight leading-[1.05]">{title}</h2>
+          <h2 className="md:col-span-8 font-display text-4xl md:text-5xl font-semibold tracking-tight">{title}</h2>
         </Reveal>
         {children}
       </div>

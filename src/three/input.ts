@@ -10,9 +10,19 @@ if (typeof window !== "undefined") {
     },
     { passive: true }
   );
-  const onScroll = () => (input.scrollY = window.scrollY);
+  // Read once per frame at most (scroll events can fire many times per frame).
+  let queued = false;
+  const read = () => {
+    queued = false;
+    input.scrollY = window.scrollY;
+  };
+  const onScroll = () => {
+    if (queued) return;
+    queued = true;
+    requestAnimationFrame(read);
+  };
   window.addEventListener("scroll", onScroll, { passive: true });
-  onScroll();
+  read();
 }
 
 export function hasWebGL() {

@@ -3,7 +3,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import SafeBoundary from "../three/SafeBoundary";
 import { hasWebGL, isLiteDevice } from "../three/input";
 import { EASE } from "./Section";
-import { ArrowDown, Download, Pin } from "./Icons";
+import { ArrowDown, Download, Moon, Pin } from "./Icons";
 import { CountUp, Magnetic, Typewriter } from "./Effects";
 import { CV_FILE, FOCUS_WORDS, PROFILE, STATS, cvUrl } from "../data";
 import { unlock } from "../secrets/store";
@@ -11,10 +11,11 @@ import { unlock } from "../secrets/store";
 const HeroGlobe = lazy(() => import("../three/HeroGlobe"));
 
 // The last letter of the name is the easter-egg switch: each tap shifts its colour, the third opens the game.
-const SECRET_COLORS = ["#FFB547", "#93D3A2", "#8FB0EC", "#ECE8DF"];
+// At rest it shares the heading's white-to-grey gradient.
+const SECRET_COLORS = ["#FFB547", "#93D3A2", "#8FB0EC"];
 
 const up = (delay: number) => ({
-  initial: { opacity: 0, y: 22 },
+  initial: { opacity: 0, y: 24 },
   animate: { opacity: 1, y: 0 },
   transition: { duration: 0.8, delay, ease: EASE },
 });
@@ -55,99 +56,75 @@ export default function Hero({ onSecret }: { onSecret: () => void }) {
   }, [night]);
 
   return (
-    <section id="top" className="relative overflow-hidden pt-28 md:pt-32">
-      <div className="graph-paper pointer-events-none absolute inset-0 opacity-60" aria-hidden />
-      <div className="pointer-events-none absolute -top-40 right-[-10%] h-[520px] w-[520px] rounded-full bg-amber/10 blur-[120px]" aria-hidden />
-
-      <div className="relative mx-auto grid max-w-6xl gap-6 px-5 md:px-8 lg:min-h-[calc(100svh-15rem)] lg:grid-cols-12 lg:items-center">
+    <section id="top" className="relative overflow-hidden pt-24">
+      <div className="relative mx-auto grid max-w-6xl gap-6 px-4 md:px-8 lg:min-h-[calc(100svh-15rem)] lg:grid-cols-12 lg:items-center">
         <div className="relative z-10 lg:col-span-6">
-          <motion.div {...up(0.05)} className="mb-7 flex flex-wrap items-center gap-3">
-            <span className="inline-flex items-center gap-2 rounded-full border border-sage/30 bg-sage/10 px-3 py-1 text-xs font-medium text-sage backdrop-blur">
+          <motion.div {...up(0.05)} className="mb-6 flex flex-wrap items-center gap-3">
+            <span className="inline-flex items-center gap-2 rounded-full border border-sage/30 bg-sage/10 px-3 py-1 text-xs font-medium text-sage">
               <span className="relative flex h-2 w-2">
                 <span className="absolute inset-0 rounded-full bg-sage animate-ping2" />
                 <span className="relative h-2 w-2 rounded-full bg-sage" />
               </span>
               Open to internships
             </span>
-            <span className="inline-flex items-center gap-1.5 text-xs text-muted">
-              <Pin className="w-3.5 h-3.5" /> {PROFILE.location}
+            <span className="inline-flex items-center gap-2 text-xs text-muted">
+              <Pin className="w-4 h-4" /> {PROFILE.location}
             </span>
             {night && (
               <motion.span
-                initial={{ opacity: 0, y: -6 }}
+                initial={{ opacity: 0, y: -8 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 1.4, duration: 0.6 }}
-                className="inline-flex items-center gap-1.5 rounded-full border border-sky/30 bg-sky/10 px-3 py-1 text-xs text-sky"
+                transition={{ delay: 1.4, duration: 0.6, ease: EASE }}
+                className="inline-flex items-center gap-2 rounded-full border border-sky/30 bg-sky/10 px-3 py-1 text-xs text-sky"
                 title={`It's ${night} where you are`}
               >
-                <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="currentColor" aria-hidden>
-                  <path d="M20.5 14.6A8.5 8.5 0 0 1 9.4 3.5a8.5 8.5 0 1 0 11.1 11.1Z" />
-                </svg>
+                <Moon className="w-4 h-4" />
                 Burning the midnight oil?
               </motion.span>
             )}
           </motion.div>
 
-          <h1
-            aria-label={PROFILE.name}
-            className="font-display font-semibold tracking-tight leading-[0.92] text-[clamp(3.4rem,10vw,7.5rem)] [perspective:900px]"
-          >
-            {words.map((word, wi) => (
-              <span
-                key={word}
-                aria-hidden
-                className={`block pb-2 ${wi === 1 ? "text-amber [text-shadow:0_0_48px_rgba(255,181,71,0.35)]" : ""}`}
-              >
-                {[...word].map((ch, ci) => {
-                  const delay = 0.15 + wi * 0.28 + ci * 0.045;
-                  const secret = wi === words.length - 1 && ci === word.length - 1;
-                  if (secret) {
-                    return (
-                      <motion.span
-                        key={ci}
-                        onClick={onSecretTap}
-                        onMouseDown={(e) => e.detail > 1 && e.preventDefault()}
-                        className="inline-block origin-bottom cursor-default select-none [-webkit-tap-highlight-color:transparent]"
-                        initial={{ opacity: 0, y: "55%", rotateX: -85, color: SECRET_COLORS[0] }}
-                        animate={{ opacity: 1, y: 0, rotateX: 0, color: SECRET_COLORS[taps] }}
-                        transition={{ default: { duration: 0.9, delay, ease: EASE }, color: { duration: 0.25 } }}
-                        whileHover={{ y: -12, transition: { duration: 0.18 } }}
-                      >
-                        <span key={taps} className={`inline-block ${taps ? "animate-pop" : ""}`}>
-                          {ch}
-                        </span>
-                      </motion.span>
-                    );
-                  }
-                  return (
-                    <motion.span
-                      key={ci}
-                      className="inline-block origin-bottom cursor-default"
-                      initial={{ opacity: 0, y: "55%", rotateX: -85 }}
-                      animate={{ opacity: 1, y: 0, rotateX: 0 }}
-                      transition={{ duration: 0.9, delay, ease: EASE }}
-                      whileHover={{ y: -12, color: wi === 1 ? "#ECE8DF" : "#FFB547", transition: { duration: 0.18 } }}
+          <h1 aria-label={PROFILE.name} className="max-w-[680px] text-5xl font-semibold tracking-tight sm:text-7xl lg:text-8xl">
+            {words.map((word, wi) => {
+              const last = wi === words.length - 1;
+              return (
+                <motion.span
+                  key={word}
+                  aria-hidden
+                  className="block w-fit bg-gradient-to-r from-white to-[#9B9B9B] bg-clip-text pb-2 text-transparent"
+                  initial={{ opacity: 0, y: 32 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 0.15 + wi * 0.15, ease: EASE }}
+                >
+                  {last ? word.slice(0, -1) : word}
+                  {last && (
+                    <span
+                      key={taps}
+                      onClick={onSecretTap}
+                      onMouseDown={(e) => e.detail > 1 && e.preventDefault()}
+                      className={`cursor-default select-none transition-colors [-webkit-tap-highlight-color:transparent] ${taps ? "inline-block animate-pop" : ""}`}
+                      style={taps ? { color: SECRET_COLORS[taps - 1] } : undefined}
                     >
-                      {ch}
-                    </motion.span>
-                  );
-                })}
-              </span>
-            ))}
+                      {word.slice(-1)}
+                    </span>
+                  )}
+                </motion.span>
+              );
+            })}
           </h1>
 
           <p className="sr-only">{PROFILE.tagline}</p>
-          <motion.p {...up(0.75)} aria-hidden className="mt-6 max-w-xl text-lg leading-relaxed text-muted">
+          <motion.p {...up(0.6)} aria-hidden className="mt-6 max-w-[680px] text-lg text-muted">
             Computer Engineering student at {PROFILE.school}.
             <br />
             Focused on <Typewriter words={FOCUS_WORDS} />
           </motion.p>
 
-          <motion.div {...up(0.9)} className="mt-9 flex flex-wrap gap-3">
+          <motion.div {...up(0.75)} className="mt-8 flex flex-wrap items-center gap-3">
             <Magnetic>
               <a
                 href="#projects"
-                className="inline-flex items-center gap-2 rounded-md bg-amber px-5 py-3 text-sm font-semibold text-bg shadow-[0_10px_40px_-10px_rgba(255,181,71,0.6)] transition hover:bg-amber/90"
+                className="inline-flex items-center gap-2 rounded-md bg-amber px-3 py-2 text-base font-semibold text-bg shadow-[0_10px_40px_-10px_rgba(255,181,71,0.6)] transition-colors hover:bg-amber/90 active:scale-[0.98]"
               >
                 See my projects <ArrowDown />
               </a>
@@ -155,7 +132,7 @@ export default function Hero({ onSecret }: { onSecret: () => void }) {
             <Magnetic>
               <a
                 href="#contact"
-                className="inline-flex items-center rounded-md border border-line bg-surface/70 px-5 py-3 text-sm font-medium text-ink backdrop-blur transition hover:border-ink/30"
+                className="inline-flex items-center rounded-md border border-line bg-surface/70 px-3 py-2 text-base font-semibold text-ink backdrop-blur transition-colors hover:border-ink/30 hover:bg-raised active:scale-[0.98]"
               >
                 Get in touch
               </a>
@@ -163,7 +140,7 @@ export default function Hero({ onSecret }: { onSecret: () => void }) {
             <a
               href={cvUrl()}
               download={CV_FILE}
-              className="inline-flex items-center gap-2 rounded-md px-3 py-3 text-sm font-medium text-muted transition hover:text-ink"
+              className="inline-flex items-center gap-2 rounded-md px-3 py-2 text-base font-semibold text-muted transition-colors hover:bg-raised hover:text-ink active:scale-[0.98]"
             >
               <Download /> Download CV
             </a>
@@ -187,19 +164,14 @@ export default function Hero({ onSecret }: { onSecret: () => void }) {
         </motion.div>
       </div>
 
-      <motion.dl {...up(1)} className="relative mx-auto mt-6 grid max-w-6xl grid-cols-2 border-t border-line md:grid-cols-4 md:px-8">
-        {STATS.map((s, i) => (
-          <div
-            key={s.label}
-            className={`px-5 py-7 md:px-6 ${i % 2 === 1 ? "border-l border-line" : ""} ${i >= 2 ? "border-t border-line md:border-t-0" : ""} ${
-              i === 2 ? "md:border-l" : ""
-            } ${i === 0 ? "md:pl-0" : ""}`}
-          >
+      <motion.dl {...up(0.9)} className="relative mx-auto mt-12 grid max-w-6xl grid-cols-2 gap-3 px-4 md:grid-cols-4 md:px-8">
+        {STATS.map((s) => (
+          <div key={s.label} className="rounded-2xl border border-line bg-surface p-6">
             <dt className="sr-only">{s.label}</dt>
-            <dd className="font-display text-4xl font-semibold tracking-tight">
+            <dd className="text-4xl font-semibold tracking-tight">
               <CountUp value={s.value} />
             </dd>
-            <dd className="mt-1 text-sm text-muted">{s.label}</dd>
+            <dd className="mt-2 text-sm text-muted">{s.label}</dd>
           </div>
         ))}
       </motion.dl>

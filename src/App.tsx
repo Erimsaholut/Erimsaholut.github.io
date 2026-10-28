@@ -4,13 +4,14 @@ import GameBoot from "./components/GameBoot";
 import Nav from "./components/Nav";
 import Hero from "./components/Hero";
 import About from "./components/About";
+import Tagline from "./components/Tagline";
 import Projects from "./components/Projects";
 import Skills from "./components/Skills";
 import Education from "./components/Education";
 import Certifications from "./components/Certifications";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
-import { CursorGlow, ScrollProgress } from "./components/Effects";
+import { ScrollProgress } from "./components/Effects";
 import SafeBoundary from "./three/SafeBoundary";
 import { hasWebGL, isLiteDevice } from "./three/input";
 import { SecretToasts, SecretsPanel } from "./secrets/SecretsUI";
@@ -80,7 +81,7 @@ export default function App() {
   }, [allFound]);
 
   return (
-    <MotionConfig reducedMotion="user">
+    <MotionConfig reducedMotion="user" transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}>
       {webgl && !lite && (
         <SafeBoundary>
           <Suspense fallback={null}>
@@ -88,13 +89,19 @@ export default function App() {
           </Suspense>
         </SafeBoundary>
       )}
-      {!lite && <CursorGlow />}
+      <a
+        href="#main"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[200] focus:rounded-md focus:bg-amber focus:px-3 focus:py-2 focus:text-sm focus:font-semibold focus:text-bg"
+      >
+        Skip to content
+      </a>
       <ScrollProgress />
       <Nav onLogoSecret={openTerminal} />
       <div className="relative z-10">
-        <main>
+        <main id="main" tabIndex={-1} className="outline-none">
           <Hero onSecret={openGameFromTitle} />
           <About />
+          <Tagline />
           <Projects />
           <Skills />
           <Certifications />
@@ -123,7 +130,7 @@ export default function App() {
       <AnimatePresence>
         {adventure && (
           <SafeBoundary key="adventure" fallback={null}>
-            <Suspense fallback={<GameBoot label="Clocking in…" />}>
+            <Suspense fallback={<GameBoot label="Loading Night Shift" variant="story" />}>
               <NightShift onClose={closeAdventure} />
             </Suspense>
           </SafeBoundary>

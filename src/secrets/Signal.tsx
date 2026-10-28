@@ -96,7 +96,7 @@ export default function Signal() {
         onClick={toggle}
         aria-expanded={listening}
         aria-label="A small light that keeps blinking"
-        className="inline-flex items-center gap-2 rounded-full px-2 py-1 font-mono text-[11px] uppercase tracking-[0.18em] text-faint transition-colors hover:text-muted [-webkit-tap-highlight-color:transparent]"
+        className="inline-flex items-center gap-2 rounded-full px-2 py-1 text-xs font-medium text-faint transition-colors hover:text-muted active:scale-[0.98] [-webkit-tap-highlight-color:transparent]"
       >
         <span
           className="h-2 w-2 rounded-full"
@@ -107,14 +107,14 @@ export default function Signal() {
       {listening && (
         <div
           role="status"
-          className="absolute bottom-full left-0 z-20 mb-2 w-[min(17rem,calc(100vw-2.5rem))] rounded-xl border border-line bg-surface/95 p-3.5 text-left shadow-2xl backdrop-blur md:left-1/2 md:-translate-x-1/2"
+          className="absolute bottom-full left-0 z-20 mb-2 w-[min(17rem,calc(100vw-2.5rem))] rounded-xl border border-line bg-surface/95 p-3 text-left shadow-2xl backdrop-blur md:left-1/2 md:-translate-x-1/2"
         >
-          <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-faint">Incoming transmission</p>
-          <p className="mt-2 min-h-[1.5rem] break-all font-mono text-base leading-6 tracking-[0.12em] text-amber">
+          <p className="text-xs font-medium text-faint">Incoming transmission</p>
+          <p className="mt-2 min-h-6 break-all font-mono text-base tracking-wider text-amber">
             {trail.replace(/\./g, "·").replace(/-/g, "−")}
             <span className="ml-0.5 inline-block w-2 animate-blink text-faint">▍</span>
           </p>
-          <p className="mt-2 text-xs leading-relaxed text-muted">♪ Listening. It repeats every few seconds.</p>
+          <p className="mt-2 text-xs text-muted">♪ Listening. It repeats every few seconds.</p>
         </div>
       )}
     </div>

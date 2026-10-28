@@ -4,7 +4,7 @@ import { SKILLS } from "../data";
 
 type Tone = "cloud" | "found" | "base";
 
-const SHORT: Record<string, string> = { "Object-Oriented Programming": "OOP", "Agile / Scrum": "Agile" };
+const SHORT: Record<string, string> = { "Object Oriented Programming": "OOP", "Agile / Scrum": "Agile" };
 
 /** Skill tags distributed on a rotating sphere; steer it by moving the pointer over it. */
 export default function SkillSphere() {
@@ -114,8 +114,7 @@ export default function SkillSphere() {
 
   return (
     <div ref={box} className="relative mx-auto aspect-square w-full max-w-[460px] select-none overflow-hidden" aria-hidden>
-      <div className="absolute inset-0 rounded-full bg-[radial-gradient(circle,rgba(255,181,71,0.12),transparent_62%)]" />
-      <svg className="absolute inset-[6%] h-[88%] w-[88%] animate-[spin_40s_linear_infinite] motion-reduce:animate-none" viewBox="0 0 100 100">
+      <svg className="absolute inset-[6%] h-[88%] w-[88%]" viewBox="0 0 100 100">
         <ellipse cx="50" cy="50" rx="48" ry="16" fill="none" stroke="#272C24" strokeWidth="0.4" />
         <ellipse cx="50" cy="50" rx="16" ry="48" fill="none" stroke="#272C24" strokeWidth="0.4" />
         <circle cx="50" cy="50" r="48" fill="none" stroke="#272C24" strokeWidth="0.4" strokeDasharray="1 2" />
@@ -127,7 +126,7 @@ export default function SkillSphere() {
             ref={(n) => {
               tags.current[i] = n;
             }}
-            className={`absolute left-0 top-0 whitespace-nowrap rounded-md px-2 py-0.5 text-xs font-medium will-change-transform sm:px-2.5 sm:py-1 sm:text-sm ${toneClass[it.tone]}`}
+            className={`absolute left-0 top-0 whitespace-nowrap rounded-md px-2 py-0.5 text-xs font-medium will-change-transform sm:px-3 sm:py-1 sm:text-sm ${toneClass[it.tone]}`}
           >
             {it.label}
           </span>

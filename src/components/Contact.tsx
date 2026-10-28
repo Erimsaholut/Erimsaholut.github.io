@@ -70,8 +70,7 @@ export default function Contact() {
   return (
     <Section id="contact" index="06" label="Contact" title={<>Let's talk. <span className="text-muted">I'm looking for an internship.</span></>}>
       <Reveal>
-        <div className="relative overflow-hidden rounded-3xl border border-line bg-surface p-7 md:p-12">
-          <div className="graph-paper pointer-events-none absolute inset-0 opacity-70" aria-hidden />
+        <div className="relative overflow-hidden rounded-3xl border border-line bg-surface p-6 md:p-12">
           <div className="relative grid gap-10 md:grid-cols-12 md:items-end">
             <div className="md:col-span-7">
               <p className="max-w-md text-lg text-muted">
@@ -80,14 +79,14 @@ export default function Contact() {
               <div className="mt-8 flex flex-wrap items-center gap-3">
                 <a
                   href={`mailto:${PROFILE.email}`}
-                  className="inline-flex items-center gap-3 rounded-md bg-amber px-5 py-3.5 font-medium text-bg transition hover:bg-amber/90"
+                  className="inline-flex items-center gap-2 rounded-md bg-amber px-3 py-2 text-base font-semibold text-bg transition-colors hover:bg-amber/90 active:scale-[0.98]"
                 >
                   <Mail className="w-5 h-5" />
                   <span className="break-all">{PROFILE.email}</span>
                 </a>
                 <button
                   onClick={copy}
-                  className="inline-flex items-center gap-2 rounded-md border border-line bg-bg/60 px-4 py-3.5 text-sm text-ink transition hover:border-ink/30"
+                  className="inline-flex items-center gap-2 rounded-md border border-line bg-bg px-3 py-2 text-base font-semibold text-ink transition-colors hover:border-ink/30 hover:bg-raised active:scale-[0.98]"
                   aria-live="polite"
                 >
                   {copied ? <Check className="w-4 h-4 text-sage" /> : <Copy className="w-4 h-4" />}
@@ -96,7 +95,7 @@ export default function Contact() {
                 <a
                   href={cvUrl()}
                   download={CV_FILE}
-                  className="inline-flex items-center gap-2 rounded-md border border-line bg-bg/60 px-4 py-3.5 text-sm text-ink transition hover:border-ink/30"
+                  className="inline-flex items-center gap-2 rounded-md border border-line bg-bg px-3 py-2 text-base font-semibold text-ink transition-colors hover:border-ink/30 hover:bg-raised active:scale-[0.98]"
                 >
                   <Download className="w-4 h-4" /> CV (PDF)
                 </a>
@@ -113,7 +112,7 @@ export default function Contact() {
                     href={href}
                     target="_blank"
                     rel="noreferrer"
-                    className="group flex items-center gap-4 rounded-xl border border-line bg-bg/60 px-5 py-4 transition-colors hover:border-amber/50"
+                    className="group flex items-center gap-4 rounded-xl border border-line bg-bg px-4 py-4 transition-colors hover:border-amber/50 hover:bg-raised active:scale-[0.98]"
                   >
                     <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-raised text-amber">
                       <Icon className="w-5 h-5" />
@@ -122,7 +121,7 @@ export default function Contact() {
                       <span className="block font-medium">{label}</span>
                       <span className="block text-sm text-muted">{sub}</span>
                     </span>
-                    <ArrowUpRight className="w-5 h-5 text-faint transition group-hover:text-amber group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                    <ArrowUpRight className="w-5 h-5 text-faint transition duration-500 group-hover:text-amber group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                   </a>
                 </li>
               ))}
@@ -138,7 +137,7 @@ export default function Contact() {
         onPointerCancel={stopHold}
         onPointerLeave={stopHold}
         onContextMenu={selectInk}
-        className="mt-2 py-4 text-right font-mono text-xs tracking-wide text-transparent"
+        className="mt-2 py-4 text-right text-xs text-transparent"
       >
         psst — the little light in the footer speaks Morse. Decode it, then tell the terminal.
       </p>

@@ -82,9 +82,9 @@ export const SCENES: Record<string, Scene> = {
     mins: 0,
     text: () => `02:47 — Buzlime warehouse, on the edge of town.
 
-You're the on-call engineer tonight, babysitting a firmware update for 40 drink kiosks across the city. The progress bar says 63%. It has said 63% for an hour.
+You're the engineer on call tonight, babysitting a firmware update for 40 drink kiosks across the city. The progress bar says 63%. It has said 63% for an hour.
 
-Outside, a car alarm starts. Then stops. Mid-beep.
+Outside, a car alarm starts. Then stops, in the middle of a beep.
 
 Mete, the night guard, radioed in twenty minutes ago. Nothing since.
 
@@ -99,7 +99,7 @@ Your phone buzzes: “EMERGENCY ALERT — Stay indoors. Do NOT approach anyone w
   headphones: {
     text: () => `64%! Progress. You lean back, satisfied.
 
-Your noise-cancelling headphones are excellent. That's why you don't hear the office window break behind you.
+Your noise cancelling headphones are excellent. That's why you don't hear the office window break behind you.
 
 A cold hand lands on your shoulder.`,
     choices: [
@@ -258,7 +258,7 @@ Around the van: four of them. Circling.
 
 Next to you: a stack of lemonade crates fresh from the cold room, a forklift with the key still in it, and the van's spare keys on a hook by the door.`,
     choices: [
-      { label: "Roll ice-cold lemonade bottles across the floor", to: "dock_bottles", when: (s) => !is(s, "eren"), run: (s) => (set(s, "eren"), set(s, "knowsCold")) },
+      { label: "Roll ice cold lemonade bottles across the floor", to: "dock_bottles", when: (s) => !is(s, "eren"), run: (s) => (set(s, "eren"), set(s, "knowsCold")) },
       { label: "Jump on the forklift and drive straight at them", to: "dock_forklift", when: (s) => !is(s, "eren"), run: (s) => (hurt(s), set(s, "eren")) },
       { label: "Grab the van keys. You're out of here.", to: "end_lone" },
       { label: "Back away slowly", to: "hall", when: (s) => !is(s, "eren"), say: "“TRAITOR!” Eren yells after you. Fair." },
@@ -267,7 +267,7 @@ Next to you: a stack of lemonade crates fresh from the cold room, a forklift wit
   },
 
   dock_bottles: {
-    text: () => `Clink. Clink. Clink. Ice-cold bottles skitter across the concrete, frost steaming off the glass.
+    text: () => `Clink. Clink. Clink. Ice cold bottles skitter across the concrete, frost steaming off the glass.
 
 The zombies stop and watch the bottles roll. They pick them up, very slowly, as if they remember something about being thirsty — and the moment their fingers touch the cold glass, they slow down even more. One of them just stands there, holding a bottle, shivering.
 
@@ -291,16 +291,16 @@ You hit a shelf, a pallet of paper cups, two zombies and — briefly — the van
       const out = [
         is(s, "speakers")
           ? `The workshop is a mess of smashed screens and sparking speakers. Whatever came in has moved on — for now.`
-          : `The kiosk workshop. Rows of half-assembled kiosks glow in the dark, their touchscreens looping a demo: “Welcome! Hoş geldiniz! Benvenuti!”
+          : `The kiosk workshop. Rows of half built kiosks glow in the dark, their touchscreens looping a demo: “Welcome! Hoş geldiniz! Benvenuti!”
 
-Something heavy bangs on the roll-up door from outside. The door bends a little. Then a little more.`,
+Something heavy bangs on the rolling door from outside. The door bends a little. Then a little more.`,
       ];
       if (!is(s, "cat")) out.push("Byte, the warehouse cat, sits on top of a kiosk, judging you.");
-      if (!has(s, "fuse") && !is(s, "power")) out.push("In the spare-parts box on the workbench, something useful catches your eye: a big 63-amp fuse. The kind generators eat.");
+      if (!has(s, "fuse") && !is(s, "power")) out.push("In the box of spare parts on the workbench, something useful catches your eye: a big 63 amp fuse. The kind generators eat.");
       return out.join("\n\n");
     },
     choices: [
-      { label: "Take the 63-amp fuse", to: "workshop", when: (s) => !has(s, "fuse") && !is(s, "power"), run: (s) => give(s, "fuse"), say: "You pocket the fuse. 63, like the progress bar. A sign." },
+      { label: "Take the 63 amp fuse", to: "workshop", when: (s) => !has(s, "fuse") && !is(s, "power"), run: (s) => give(s, "fuse"), say: "You pocket the fuse. 63, like the progress bar. A sign." },
       { label: "Pick up Byte", to: "workshop", when: (s) => !is(s, "cat"), run: (s) => set(s, "cat"), say: "Byte allows it. Barely. A rumbling purr starts up against your shoulder." },
       {
         label: "Crank every demo kiosk to full volume and open the door",
@@ -320,7 +320,7 @@ Something heavy bangs on the roll-up door from outside. The door bends a little.
   workshop_swarm: {
     text: () => `The jingle blasts at full volume: “WELCOME! HOŞ GELDİNİZ! BENVENUTI!”
 
-The roll-up door crashes open. The zombies do not dance. They do not queue. They do, however, come in.
+The rolling door crashes open. The zombies do not dance. They do not queue. They do, however, come in.
 
 You dive behind a kiosk while they tear into the speakers, and something rakes across your back as you escape through the side door. Behind you, the demo voice gurgles one last “Benven—” and dies.`,
     choices: [{ label: "Run back to the hallway", to: "hall" }],
@@ -353,7 +353,7 @@ The compressor display blinks: BATTERY 19%. Without the generator, this place wi
 
 Only known remedy: deep sleep. Subjects calmed down within seconds when exposed to low, steady sounds — rain, white noise, and (unexpectedly) a cat purring.”
 
-They're not undead. They're un-slept.`,
+They're not undead. They're unslept.`,
     choices: [{ label: "Back to the hallway", to: "hall" }],
   },
 
@@ -457,7 +457,7 @@ At 07:00 you dare to look inside. The zombies are… shivering. Blinking. Lookin
 
 Turns out the infection can't survive two hours at −2 °C.
 
-By noon, scientists are calling it “the Buzlime Protocol”. By evening, the marketing team has already printed the T-shirts: STAY CHILL.`,
+By noon, scientists are calling it “the Buzlime Protocol”. By evening, the marketing team has already printed the shirts: STAY CHILL.`,
   },
 
   end_happyhour: {
@@ -465,7 +465,7 @@ By noon, scientists are calling it “the Buzlime Protocol”. By evening, the m
     mins: 200,
     text: () => `The jingle blasts at full volume: “WELCOME! HOŞ GELDİNİZ! BENVENUTI!”
 
-The roll-up door crashes open… and the zombies stop.
+The rolling door crashes open… and the zombies stop.
 
 They sway. They blink at the bright screens. Then, slowly, they form a line. A perfect, orderly, very polite queue.
 
@@ -487,7 +487,7 @@ Turns out they were never hungry. Just thirsty.`,
 
 You drive until the sun comes up. You survive.
 
-The next morning, every Buzlime kiosk in the city shows the same photo: you, mid-escape, under a big headline.
+The next morning, every Buzlime kiosk in the city shows the same photo: you, halfway through your escape, under a big headline.
 
 EMPLOYEE OF THE MONTH: ABANDONED THE NIGHT SHIFT.`,
   },
@@ -495,7 +495,7 @@ EMPLOYEE OF THE MONTH: ABANDONED THE NIGHT SHIFT.`,
   end_zero: {
     ending: "zero",
     mins: 230,
-    text: () => `You hold the laptop's microphone up to Byte. Byte, for once, cooperates: a deep, rumbling, industrial-grade purr. You record ten seconds, loop it, and type:
+    text: () => `You hold the laptop's microphone up to Byte. Byte, for once, cooperates: a deep, rumbling, industrial strength purr. You record ten seconds, loop it, and type:
 
 deploy --fleet all --mode night --audio byte_purr.wav
 
@@ -516,7 +516,7 @@ Then you're hungry.
 
 ${INTERN} at your desk, staring at the progress bar. 63%. ${DEDICATION}
 
-Your on-call rotation ends in six days.`,
+Your shift on call ends in six days.`,
   },
 
   end_still: {

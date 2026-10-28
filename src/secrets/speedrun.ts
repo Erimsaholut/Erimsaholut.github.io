@@ -56,11 +56,21 @@ export function useSpeedrun() {
       if (e.key === "End" || e.key === "Home" || ((e.metaKey || e.ctrlKey) && (e.key === "ArrowDown" || e.key === "ArrowUp"))) taintSpeedrun();
     };
 
-    window.addEventListener("scroll", onScroll, { passive: true });
+    // Measured once per frame, not on every scroll event.
+    let queued = false;
+    const onScrollEvent = () => {
+      if (queued) return;
+      queued = true;
+      requestAnimationFrame(() => {
+        queued = false;
+        onScroll();
+      });
+    };
+    window.addEventListener("scroll", onScrollEvent, { passive: true });
     document.addEventListener("click", onClick, true);
     window.addEventListener("keydown", onKey);
     return () => {
-      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("scroll", onScrollEvent);
       document.removeEventListener("click", onClick, true);
       window.removeEventListener("keydown", onKey);
     };

@@ -7,6 +7,7 @@ import { useGameOpen } from "./gameOverlay";
 function RedrawOnScroll() {
   const invalidate = useThree((s) => s.invalidate);
   useEffect(() => {
+    // invalidate() only asks for the next frame, so this is already throttled to one render per frame.
     const f = () => invalidate();
     window.addEventListener("scroll", f, { passive: true });
     window.addEventListener("resize", f);

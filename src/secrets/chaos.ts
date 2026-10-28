@@ -8,6 +8,7 @@ import { unlock } from "./store";
  */
 
 const MAX_PIECES = 36;
+const EASE = "cubic-bezier(0.22, 1, 0.36, 1)"; // the site's base curve
 let running = false;
 
 const rand = (a: number, b: number) => a + Math.random() * (b - a);
@@ -44,24 +45,24 @@ function hud() {
   el.setAttribute("role", "status");
   el.style.cssText =
     "position:fixed;left:50%;top:84px;z-index:115;transform:translateX(-50%);pointer-events:none;" +
-    "font:500 12px/1.4 'JetBrains Mono',ui-monospace,monospace;letter-spacing:.02em;width:max-content;max-width:calc(100vw - 32px);text-align:center;" +
+    "font:500 12px/1.4 'Geist Mono Variable',ui-monospace,monospace;letter-spacing:.02em;width:max-content;max-width:calc(100vw - 32px);text-align:center;" +
     "padding:9px 14px;border-radius:999px;border:1px solid;backdrop-filter:blur(8px);transition:color .3s,border-color .3s,background .3s";
   const set = (text: string, tone: "bad" | "warn" | "ok") => {
     const c = tone === "bad" ? "#FF5A4F" : tone === "warn" ? "#FFB547" : "#93D3A2";
     el.textContent = text;
     el.style.color = c;
     el.style.borderColor = c + "66";
-    el.style.background = "rgba(15,17,14,.86)";
+    el.style.background = "rgba(19,18,9,.88)";
   };
   document.body.appendChild(el);
   el.animate([{ opacity: 0, transform: "translate(-50%,-8px)" }, { opacity: 1, transform: "translate(-50%,0)" }], {
     duration: 250,
-    easing: "ease-out",
+    easing: EASE,
   });
   return {
     set,
     remove: async () => {
-      await el.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 400, fill: "forwards" }).finished.catch(() => {});
+      await el.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 400, easing: EASE, fill: "forwards" }).finished.catch(() => {});
       el.remove();
     },
   };
@@ -82,7 +83,7 @@ export async function runChaos() {
   if (!reduce)
     main?.animate(
       [0, -7, 6, -5, 4, -2, 0].map((x, i) => ({ transform: `translate(${x}px, ${i % 2 ? 2 : -2}px)` })),
-      { duration: 420, easing: "linear" }
+      { duration: 420, easing: EASE }
     );
   await wait(reduce ? 200 : 380);
 
@@ -94,7 +95,7 @@ export async function runChaos() {
       : `translate(${rand(-90, 90).toFixed(0)}px, ${(Math.max(60, vh - r.bottom) + rand(20, 260)).toFixed(0)}px) rotate(${rand(-55, 55).toFixed(0)}deg)`;
     const anim = el.animate(
       [
-        { transform: "none", opacity: 1, easing: "ease-out" },
+        { transform: "none", opacity: 1, easing: EASE },
         { transform: `rotate(${rand(-6, 6).toFixed(1)}deg)`, opacity: 1, offset: 0.18, easing: "cubic-bezier(.55,0,1,.45)" },
         { transform: fallen, opacity: reduce ? 0.15 : 0.85 },
       ],
@@ -105,7 +106,7 @@ export async function runChaos() {
   await wait(1500);
   status.set(`✕ ${n}/${n} instances down · health checks failing`, "bad");
   await wait(1100);
-  status.set("↻ auto-healing — replacing instances…", "warn");
+  status.set("↻ recovering — replacing instances…", "warn");
 
   const heals = falls.map(({ el, fallen, anim, dead }) => {
     const heal = el.animate([{ transform: fallen, opacity: dead }, { transform: "none", opacity: 1 }], {

@@ -53,7 +53,7 @@ function PlotCanvas({ startDelay }: { startDelay: number }) {
       const y = (v: number) => T + (1 - v) * ph;
 
       ctx.clearRect(0, 0, w, h);
-      ctx.font = '10px "JetBrains Mono", monospace';
+      ctx.font = '10px "Geist Mono Variable", monospace';
 
       // grid + axis labels
       ctx.strokeStyle = "rgba(236,232,223,0.07)";
@@ -178,21 +178,21 @@ export default function NotebookCard() {
     <div className="rounded-2xl border border-line bg-surface/90 shadow-[0_30px_80px_-20px_rgba(0,0,0,0.6)] backdrop-blur">
       <div className="flex items-center justify-between border-b border-line px-4 py-3">
         <span className="font-mono text-xs text-muted">profile.ipynb</span>
-        <span className="flex items-center gap-2 font-mono text-[11px] text-faint">
+        <span className="flex items-center gap-2 font-mono text-xs text-faint">
           <span className="h-1.5 w-1.5 rounded-full bg-sage" /> Python 3 · idle
         </span>
       </div>
 
       <div className="grid grid-cols-[auto,1fr] gap-x-3 px-4 pt-4">
-        <span className="font-mono text-[11px] text-faint pt-0.5">In [1]:</span>
-        <pre className="overflow-x-auto rounded-lg border border-line bg-bg/60 px-3 py-2.5 font-mono text-[12.5px] leading-6">
+        <span className="font-mono text-xs text-faint pt-0.5">In [1]:</span>
+        <pre className="overflow-x-auto rounded-lg border border-line bg-bg/60 px-3 py-3 font-mono text-xs">
           {CODE.map((line, i) => (
             <motion.div
               key={i}
               initial={reduce ? false : { opacity: 0, x: -6 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: 0.6 + i * lineDelay, duration: 0.3 }}
+              transition={{ delay: 0.6 + i * lineDelay, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
             >
               {line.map(([t, c], j) => (
                 <span key={j} className={c}>
@@ -206,7 +206,7 @@ export default function NotebookCard() {
       </div>
 
       <div className="grid grid-cols-[auto,1fr] gap-x-3 px-4 pb-4 pt-3">
-        <span className="font-mono text-[11px] text-faint pt-1">Out[1]:</span>
+        <span className="font-mono text-xs text-faint pt-1">Out[1]:</span>
         <PlotCanvas startDelay={plotDelay} />
       </div>
     </div>

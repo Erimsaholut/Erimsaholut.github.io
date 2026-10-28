@@ -11,7 +11,7 @@ export const PROFILE = {
   tagline:
     "Computer Engineering student at Politecnico di Torino, focused on cloud computing, AWS and backend systems.",
   summary:
-    "I'm a Computer Engineering student at Politecnico di Torino, focused on cloud computing and AWS. I hold the AWS Certified Cloud Practitioner credential, and I've built several Flutter apps — including freelance work — on real-time Firebase backends, which taught me to turn real-world requirements into working systems. I also enjoy data analysis with Python. My goal is to grow into a solutions engineering role, and I'm looking for an internship where I can gain industry experience on real cloud problems.",
+    "I'm a Computer Engineering student at Politecnico di Torino, focused on cloud computing and AWS. I hold the AWS Certified Cloud Practitioner credential, and I've built several Flutter apps — including freelance work — on Firebase backends that update in real time, which taught me to turn requirements from the real world into working systems. I also enjoy data analysis with Python. My goal is to grow into a solutions engineering role, and I'm looking for an internship where I can gain industry experience on real cloud problems.",
 };
 
 export const SITE_URL = "https://erimsaholut.github.io";
@@ -21,7 +21,10 @@ export const CV_FILE = "Erimsah-Olut-CV.pdf";
 export const cvUrl = () => `${import.meta.env?.BASE_URL ?? "/"}${CV_FILE}`;
 /** The CV's profile paragraph — the site's summary, in CV voice. */
 export const CV_SUMMARY =
-  "Computer Engineering student at Politecnico di Torino, focused on cloud computing and AWS. AWS Certified Cloud Practitioner (CLF-C02). Built several Flutter apps on real-time Firebase backends — including a multilingual vending-kiosk app now running in production at Buzlime — and enjoys data analysis with Python. Aiming to grow into a solutions engineering role; looking for an internship to gain industry experience on real cloud problems.";
+  "Computer Engineering student at Politecnico di Torino, focused on cloud computing and AWS. AWS Certified Cloud Practitioner (CLF-C02). Built several Flutter apps on Firebase backends that update in real time — including a multilingual vending kiosk app now running in production at Buzlime — and enjoys data analysis with Python. Aiming to grow into a solutions engineering role; looking for an internship to gain industry experience on real cloud problems.";
+
+/** The large statement between About and Projects; one entry per line. */
+export const TAGLINE = ["I learn by shipping real software.", "My kiosk app already runs in production.", "Next, I want to build on AWS."];
 
 export const FOCUS_WORDS = ["cloud computing.", "AWS.", "backend systems."];
 
@@ -63,17 +66,17 @@ export const PROJECTS: {
     type: "Freelance · Team project",
     art: "kiosk",
     description:
-      "A multilingual self-service beverage kiosk with a real-time Firestore backend, now running in production at Buzlime — a cold-drink vending startup. I implemented both the frontend and the backend.",
-    highlights: ["Multilingual self-service UI", "Real-time stock & sales tracking", "Refund and maintenance logs"],
+      "A multilingual beverage kiosk that customers use on their own, with a Firestore backend that updates in real time. It now runs in production at Buzlime, a cold drink vending startup. I implemented both the frontend and the backend.",
+    highlights: ["Multilingual UI for self service", "Live stock and sales tracking", "Refund and maintenance logs"],
     stack: ["Flutter", "Firebase", "Firestore"],
     live: { url: "https://buzlime.com", label: "buzlime.com" },
   },
   {
-    title: "Real-Time Chat App",
-    type: "Full-stack project",
+    title: "Real Time Chat App",
+    type: "Full stack project",
     art: "chat",
     description:
-      "A full-stack, real-time messaging platform built on Firebase Auth and Firestore.",
+      "A full stack messaging platform with live updates, built on Firebase Auth and Firestore.",
     highlights: ["Secure authentication", "User profiles", "Live group chat & friend interactions"],
     stack: ["Flutter", "Firebase Auth", "Firestore"],
   },
@@ -82,7 +85,7 @@ export const PROJECTS: {
     type: "Freelance project",
     art: "cafe",
     description:
-      "A local-storage-based POS and analytics system for a local café, with visual dashboards for revenue trends and product performance.",
+      "A POS and analytics system for a local café that keeps its data on the device, with visual dashboards for revenue trends and product performance.",
     highlights: ["Weekly, monthly & yearly sales reports", "Order volume tracking", "Cost–profit ratio calculation"],
     stack: ["Flutter", "Local storage"],
   },
@@ -91,7 +94,7 @@ export const PROJECTS: {
     type: "Data analysis",
     art: "data",
     description:
-      "A series of analysis and visualization notebooks on real-world datasets: data cleaning, correlation analysis and visualization.",
+      "A series of analysis and visualization notebooks on datasets from the real world: data cleaning, correlation analysis and visualization.",
     highlights: [
       "Turkish provincial data: IQ, education, divorce rates, election results",
       "Student lifestyle data: study habits, GPA and stress levels",
@@ -110,12 +113,12 @@ export const SKILLS: { group: string; items: string[]; foundational?: boolean; n
     group: "AWS services",
     items: AWS_SERVICES,
     foundational: true,
-    note: "Foundational, certification-level knowledge (CLF-C02)",
+    note: "Foundational knowledge at certification level (CLF-C02)",
   },
   { group: "Programming languages", items: ["Python", "Java", "C", "Dart", "SQL", "MATLAB"] },
   { group: "Databases", items: ["MySQL", "PostgreSQL", "Firestore"] },
   { group: "Frameworks", items: ["Flutter"] },
-  { group: "Practices & tools", items: ["Object-Oriented Programming", "Agile / Scrum", "Git", "GitHub"] },
+  { group: "Practices & tools", items: ["Object Oriented Programming", "Agile / Scrum", "Git", "GitHub"] },
   { group: "Data analysis", items: ["NumPy", "Pandas", "Matplotlib", "Seaborn"] },
 ];
 
@@ -135,8 +138,8 @@ export const EDUCATION = [
     years: "2022 — 2024",
     location: "Manisa, Türkiye",
     current: false,
-    notes: ["GPA 3.62", "Merit-based academic scholarship for high departmental ranking"],
-    coursework: ["Python", "C", "Java", "Data Structures", "Object-Oriented Programming"],
+    notes: ["GPA 3.62", "Academic scholarship for a high departmental ranking"],
+    coursework: ["Python", "C", "Java", "Data Structures", "Object Oriented Programming"],
   },
 ];
 

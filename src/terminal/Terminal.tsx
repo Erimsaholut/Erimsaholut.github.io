@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { ALIASES, COMMANDS, FILES, nightShiftClearance, type Ctx } from "./commands";
 import { isFound, unlock } from "../secrets/store";
 import { isLiteDevice } from "../three/input";
+import { EASE } from "../components/Section";
 
 const PROMPT = "erimsah@torino:~$";
 const QUICK = ["help", "whoami", "neofetch", "projects", "ls -a", "sudo hire erimsah", "play", "nightshift"];
@@ -33,7 +34,7 @@ function Matrix({ onDone }: { onDone: () => void }) {
     const tick = (now: number) => {
       ctx.fillStyle = "rgba(11,13,10,0.12)";
       ctx.fillRect(0, 0, r.width, r.height);
-      ctx.font = `${size}px "JetBrains Mono", monospace`;
+      ctx.font = `${size}px "Geist Mono Variable", monospace`;
       drops.forEach((y, i) => {
         ctx.fillStyle = Math.random() > 0.96 ? "#ECE8DF" : "#93D3A2";
         ctx.fillText(chars[Math.floor(Math.random() * chars.length)], i * size, y * size);
@@ -234,7 +235,7 @@ export default function Terminal({ onClose, onPlay, onAdventure }: { onClose: ()
     }
   };
 
-  const height = lite ? Math.max(320, vh - 12) : Math.min(window.innerHeight * 0.62, 620);
+  const height = lite ? Math.max(320, vh - 16) : Math.min(window.innerHeight * 0.62, 620);
 
   return (
     <motion.div
@@ -251,14 +252,14 @@ export default function Terminal({ onClose, onPlay, onAdventure }: { onClose: ()
         initial={{ y: "-105%" }}
         animate={{ y: 0 }}
         exit={{ y: "-105%" }}
-        transition={{ type: "spring", stiffness: 260, damping: 30 }}
+        transition={{ duration: 0.5, ease: EASE }}
         style={{ height }}
-        className="absolute inset-x-0 top-0 mx-auto flex max-w-4xl flex-col overflow-hidden rounded-b-2xl border border-t-0 border-amber/25 bg-[#0B0D0A]/95 font-mono text-[13px] leading-relaxed text-ink shadow-[0_30px_80px_-20px_rgba(0,0,0,0.9)] backdrop-blur-xl sm:text-sm"
+        className="absolute inset-x-2 top-2 mx-auto flex max-w-4xl flex-col overflow-hidden rounded-2xl border border-amber/25 bg-bg/95 font-mono text-xs text-ink shadow-[0_30px_80px_-20px_rgba(0,0,0,0.9)] backdrop-blur-xl sm:text-sm"
         onClick={() => !lite && input.current?.focus()}
       >
-        <div className="flex items-center justify-between border-b border-line px-4 py-2.5">
+        <div className="flex items-center justify-between border-b border-line px-4 py-3">
           <span className="text-xs text-muted">erimsah@torino: ~</span>
-          <button onClick={close} aria-label="Close terminal" className="rounded-md px-2 py-1 text-xs text-muted transition hover:bg-raised hover:text-ink">
+          <button onClick={close} aria-label="Close terminal" className="rounded-md px-2 py-1 text-xs text-muted transition-colors hover:bg-raised hover:text-ink active:scale-[0.98]">
             esc ✕
           </button>
         </div>
@@ -282,7 +283,7 @@ export default function Terminal({ onClose, onPlay, onAdventure }: { onClose: ()
                 key={q}
                 disabled={busy}
                 onClick={() => void run(q)}
-                className="shrink-0 rounded-md border border-line bg-raised px-2.5 py-1.5 text-xs text-ink/90 active:border-amber/60"
+                className="shrink-0 rounded-md border border-line bg-raised px-3 py-2 text-xs text-ink/90 transition-colors active:scale-[0.98] active:border-amber/60"
               >
                 {q}
               </button>

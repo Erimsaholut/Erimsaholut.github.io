@@ -19,9 +19,8 @@ const CHROME = process.env.CHROME ?? "/Applications/Google Chrome.app/Contents/M
 const font = (pkg: string, file: string) => pathToFileURL(join(ROOT, "node_modules", pkg, "files", file)).href;
 
 const FONTS = `
-@font-face { font-family: "Inter"; font-weight: 100 900; src: url("${font("@fontsource-variable/inter", "inter-latin-wght-normal.woff2")}") format("woff2"); }
-@font-face { font-family: "Bricolage"; font-weight: 200 800; src: url("${font("@fontsource-variable/bricolage-grotesque", "bricolage-grotesque-latin-wght-normal.woff2")}") format("woff2"); }
-@font-face { font-family: "JB Mono"; font-weight: 500; src: url("${font("@fontsource/jetbrains-mono", "jetbrains-mono-latin-500-normal.woff2")}") format("woff2"); }`;
+@font-face { font-family: "Geist"; font-weight: 100 900; src: url("${font("@fontsource-variable/geist", "geist-latin-wght-normal.woff2")}") format("woff2"); }
+@font-face { font-family: "Geist Mono"; font-weight: 100 900; src: url("${font("@fontsource-variable/geist-mono", "geist-mono-latin-wght-normal.woff2")}") format("woff2"); }`;
 
 const esc = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 const host = (url: string) => url.replace(/^https?:\/\/(www\.)?/, "");
@@ -70,15 +69,15 @@ function cvHtml() {
 ${FONTS}
 @page { size: A4; margin: 12mm 15mm 11mm; }
 * { box-sizing: border-box; }
-body { margin: 0; font: 400 9.2pt/1.38 "Inter", system-ui, sans-serif; color: #1d1f1b; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+body { margin: 0; font: 400 9.2pt/1.38 "Geist", system-ui, sans-serif; color: #1d1f1b; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 a { color: inherit; text-decoration: none; border-bottom: 0.5pt solid #c9a46a; }
-h1 { margin: 0; font: 650 27pt/1 "Bricolage", sans-serif; letter-spacing: -0.02em; }
+h1 { margin: 0; font: 600 27pt/1 "Geist", sans-serif; letter-spacing: -0.02em; }
 h1 span { color: #B26A00; }
 .role { margin: 4pt 0 0; font-size: 11pt; color: #3d4039; }
 .contact { margin: 7pt 0 0; font-size: 8.8pt; color: #3d4039; }
 .dot { margin: 0 5pt; color: #b9b3a6; }
 header { padding-bottom: 9pt; border-bottom: 1.4pt solid #1d1f1b; }
-h2 { margin: 10pt 0 4pt; font: 600 8.4pt/1 "JB Mono", monospace; letter-spacing: 0.04em; text-transform: uppercase; color: #B26A00; display: flex; align-items: center; gap: 8pt; }
+h2 { margin: 10pt 0 4pt; font: 600 8.4pt/1 "Geist", sans-serif; letter-spacing: 0.06em; text-transform: uppercase; color: #B26A00; display: flex; align-items: center; gap: 8pt; }
 h2::after { content: ""; flex: 1; height: 0.6pt; background: #e2dccf; }
 p { margin: 0; }
 .entry { margin-bottom: 5pt; break-inside: avoid; }
@@ -172,8 +171,7 @@ function globeSvg(cx: number, cy: number, r: number) {
   );
   return `<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg" style="position:absolute;inset:0">
     <defs><radialGradient id="glow" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#FFB547" stop-opacity="0.22"/><stop offset="1" stop-color="#FFB547" stop-opacity="0"/></radialGradient></defs>
-    <circle cx="${cx}" cy="${cy}" r="${r * 1.45}" fill="url(#glow)"/>
-    <circle cx="${cx}" cy="${cy}" r="${r}" fill="#121510"/>
+        <circle cx="${cx}" cy="${cy}" r="${r}" fill="#121510"/>
     <ellipse cx="${cx}" cy="${cy}" rx="${r * 1.2}" ry="${r * 0.26}" fill="none" stroke="#FFB547" stroke-opacity="0.28" stroke-width="1.5" transform="rotate(-16 ${cx} ${cy})"/>
     ${dots.join("")}
     <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#ECE8DF" stroke-opacity="0.16" stroke-width="1.5"/>
@@ -184,28 +182,27 @@ function globeSvg(cx: number, cy: number, r: number) {
 function ogHtml() {
   return `<!doctype html><html><head><meta charset="utf-8"><style>
 ${FONTS}
-html, body { margin: 0; width: 1200px; height: 630px; overflow: hidden; background: #0F110E; }
-body { position: relative; font-family: "Inter", sans-serif; color: #ECE8DF; }
+html, body { margin: 0; width: 1200px; height: 630px; overflow: hidden; background: #131209; }
+body { position: relative; font-family: "Geist", sans-serif; color: #ECE8DF; }
 .grid { position: absolute; inset: 0; background-image: linear-gradient(to right, rgba(236,232,223,.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(236,232,223,.05) 1px, transparent 1px); background-size: 48px 48px; }
 .copy { position: absolute; left: 72px; top: 58px; width: 660px; }
-.logo { display: flex; align-items: center; gap: 12px; font: 600 22px "Bricolage"; }
-.eyebrow { margin-top: 46px; font: 500 17px "JB Mono", monospace; letter-spacing: .2em; color: #FFB547; }
-h1 { margin: 14px 0 0; font: 650 104px/0.9 "Bricolage", sans-serif; letter-spacing: -0.035em; }
-h1 span { display: block; color: #FFB547; text-shadow: 0 0 60px rgba(255,181,71,.35); }
+.logo { display: flex; align-items: center; gap: 12px; font: 600 22px "Geist"; }
+.eyebrow { margin-top: 46px; font: 500 17px "Geist", sans-serif; letter-spacing: .2em; color: #FFB547; }
+h1 { margin: 14px 0 0; font: 600 104px/1 "Geist", sans-serif; letter-spacing: -0.035em; }
+h1 span { display: block; width: fit-content; background: linear-gradient(90deg, #FFFFFF, #9B9B9B); -webkit-background-clip: text; background-clip: text; color: transparent; padding-bottom: 8px; }
 .sub { margin-top: 24px; font-size: 24px; line-height: 1.35; color: #A2A499; }
 .chips { margin-top: 22px; display: flex; gap: 10px; }
-.chip { padding: 8px 14px; border: 1px solid #343a30; border-radius: 10px; background: #151813; font-size: 19px; color: #ECE8DF; }
-.foot { position: absolute; left: 72px; right: 72px; bottom: 44px; display: flex; justify-content: space-between; font: 500 17px "JB Mono", monospace; color: #6F7268; }
+.chip { padding: 8px 14px; border: 1px solid #313131; border-radius: 12px; background: #181818; font-size: 19px; color: #ECE8DF; }
+.foot { position: absolute; left: 72px; right: 72px; bottom: 44px; display: flex; justify-content: space-between; font: 500 17px "Geist Mono", monospace; color: #6F7268; }
 .foot b { font-weight: 500; color: #FFB547; }
 </style></head><body>
-<div class="grid"></div>
 ${globeSvg(955, 300, 222)}
 <div class="copy">
   <div class="logo">
     <svg viewBox="0 0 32 32" width="40" height="40"><g fill="#ECE8DF"><rect x="5" y="9" width="3" height="14" rx="1"/><rect x="5" y="9" width="9" height="3" rx="1"/><rect x="5" y="14.5" width="7" height="3" rx="1"/><rect x="5" y="20" width="9" height="3" rx="1"/></g><circle cx="21.5" cy="16" r="5.5" fill="none" stroke="#FFB547" stroke-width="3"/></svg>
   </div>
   <div class="eyebrow">PORTFOLIO · ${esc(PROFILE.location.toUpperCase())}</div>
-  <h1>Erimsah<span>Olut</span></h1>
+  <h1><span>Erimsah</span><span>Olut</span></h1>
   <div class="sub">Computer Engineering student at ${esc(PROFILE.school)}</div>
   <div class="chips"><span class="chip">Cloud computing</span><span class="chip">AWS</span><span class="chip">Backend</span></div>
 </div>

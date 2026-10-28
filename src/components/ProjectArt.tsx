@@ -14,11 +14,11 @@ function Kiosk() {
   return (
     <>
       <rect x="118" y="18" width="104" height="150" rx="10" fill="#141712" stroke={LINE} strokeWidth="2" />
-      <rect x="130" y="30" width="80" height="34" rx="5" fill="#0F110E" stroke={LINE} />
+      <rect x="130" y="30" width="80" height="34" rx="5" fill="#131209" stroke={LINE} />
       {["EN", "TR", "IT"].map((l, i) => (
         <g key={l}>
           <rect x={137 + i * 23} y="40" width="19" height="14" rx="3" fill={i === 0 ? AMBER : "none"} stroke={i === 0 ? AMBER : LINE} />
-          <text x={146.5 + i * 23} y="50.5" textAnchor="middle" fontSize="7.5" fontFamily="JetBrains Mono, monospace" fill={i === 0 ? "#0F110E" : INK}>
+          <text x={146.5 + i * 23} y="50.5" textAnchor="middle" fontSize="7.5" fontFamily="Geist Mono Variable, monospace" fill={i === 0 ? "#131209" : INK}>
             {l}
           </text>
         </g>
@@ -47,12 +47,12 @@ function Kiosk() {
       <g className="transition-transform duration-500 group-hover:translate-x-1">
         <rect x="236" y="62" width="64" height="26" rx="13" fill="#141712" stroke={LINE} />
         <circle cx="250" cy="75" r="4" fill={SAGE} />
-        <text x="260" y="78.5" fontSize="9" fontFamily="JetBrains Mono, monospace" fill={INK}>live</text>
+        <text x="260" y="78.5" fontSize="9" fontFamily="Geist Mono Variable, monospace" fill={INK}>live</text>
       </g>
       <path d="M222 75 C 228 75, 230 75, 236 75" stroke={LINE} strokeWidth="2" strokeDasharray="3 3" />
       <g>
         <rect x="30" y="96" width="70" height="26" rx="13" fill="#141712" stroke={LINE} />
-        <text x="65" y="112.5" textAnchor="middle" fontSize="9" fontFamily="JetBrains Mono, monospace" fill={INK}>stock</text>
+        <text x="65" y="112.5" textAnchor="middle" fontSize="9" fontFamily="Geist Mono Variable, monospace" fill={INK}>stock</text>
       </g>
       <path d="M100 109 H 118" stroke={LINE} strokeWidth="2" strokeDasharray="3 3" />
     </>
@@ -85,15 +85,15 @@ function Cafe() {
         strokeLinejoin="round"
       />
       {bars.map((h, i) => (
-        <circle key={i} cx={62 + i * 32} cy={150 - h - 14} r="3" fill="#0F110E" stroke={SAGE} strokeWidth="2" />
+        <circle key={i} cx={62 + i * 32} cy={150 - h - 14} r="3" fill="#131209" stroke={SAGE} strokeWidth="2" />
       ))}
       {["W", "M", "Y"].map((l, i) => (
         <g key={l}>
           <rect x={40 + i * 30} y="20" width="24" height="18" rx="5" fill={i === 1 ? AMBER : "none"} stroke={i === 1 ? AMBER : LINE} />
-          <text x={52 + i * 30} y="32.5" textAnchor="middle" fontSize="9" fontFamily="JetBrains Mono, monospace" fill={i === 1 ? "#0F110E" : INK}>{l}</text>
+          <text x={52 + i * 30} y="32.5" textAnchor="middle" fontSize="9" fontFamily="Geist Mono Variable, monospace" fill={i === 1 ? "#131209" : INK}>{l}</text>
         </g>
       ))}
-      <text x="286" y="33" textAnchor="end" fontSize="10" fontFamily="JetBrains Mono, monospace" fill={SAGE}>profit ↑</text>
+      <text x="286" y="33" textAnchor="end" fontSize="10" fontFamily="Geist Mono Variable, monospace" fill={SAGE}>profit ↑</text>
     </>
   );
 }
@@ -102,25 +102,25 @@ function Chat() {
   return (
     <>
       <circle cx="52" cy="58" r="13" fill="#2B3127" />
-      <rect x="74" y="40" width="130" height="34" rx="12" fill="#1B1F19" stroke={LINE} />
+      <rect x="74" y="40" width="130" height="34" rx="12" fill="#1F1F1F" stroke={LINE} />
       <rect x="86" y="51" width="80" height="5" rx="2.5" fill={LINE} />
       <rect x="86" y="61" width="52" height="5" rx="2.5" fill={LINE} />
 
       <g className="transition-transform duration-500 group-hover:-translate-y-1">
         <rect x="128" y="88" width="140" height="34" rx="12" fill={AMBER} />
-        <rect x="140" y="99" width="90" height="5" rx="2.5" fill="#0F110E" fillOpacity="0.45" />
-        <rect x="140" y="109" width="60" height="5" rx="2.5" fill="#0F110E" fillOpacity="0.45" />
+        <rect x="140" y="99" width="90" height="5" rx="2.5" fill="#131209" fillOpacity="0.45" />
+        <rect x="140" y="109" width="60" height="5" rx="2.5" fill="#131209" fillOpacity="0.45" />
       </g>
       <circle cx="284" cy="106" r="13" fill={SKY} fillOpacity="0.8" />
 
       <circle cx="52" cy="152" r="13" fill="#2B3127" />
-      <rect x="74" y="136" width="62" height="30" rx="12" fill="#1B1F19" stroke={LINE} />
+      <rect x="74" y="136" width="62" height="30" rx="12" fill="#1F1F1F" stroke={LINE} />
       {[0, 1, 2].map((i) => (
         <circle key={i} cx={92 + i * 13} cy="151" r="3.5" fill={INK} fillOpacity={0.35 + i * 0.2} />
       ))}
       <rect x="216" y="20" width="76" height="22" rx="11" fill="#141712" stroke={LINE} />
       <circle cx="230" cy="31" r="3.5" fill={SAGE} />
-      <text x="240" y="34.5" fontSize="9" fontFamily="JetBrains Mono, monospace" fill={INK}>online</text>
+      <text x="240" y="34.5" fontSize="9" fontFamily="Geist Mono Variable, monospace" fill={INK}>online</text>
     </>
   );
 }
@@ -153,7 +153,7 @@ function Data() {
       ))}
       <path d="M50 138 L 282 52" stroke={AMBER} strokeWidth="2.5" strokeDasharray="6 5" />
       <rect x="200" y="22" width="86" height="22" rx="11" fill="#141712" stroke={LINE} />
-      <text x="243" y="36.5" textAnchor="middle" fontSize="9" fontFamily="JetBrains Mono, monospace" fill={AMBER}>corr()</text>
+      <text x="243" y="36.5" textAnchor="middle" fontSize="9" fontFamily="Geist Mono Variable, monospace" fill={AMBER}>corr()</text>
     </>
   );
 }

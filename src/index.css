@@ -1,7 +1,5 @@
-@import "@fontsource-variable/inter";
-@import "@fontsource-variable/bricolage-grotesque";
-@import "@fontsource/jetbrains-mono/400.css";
-@import "@fontsource/jetbrains-mono/500.css";
+@import "@fontsource-variable/geist";
+@import "@fontsource-variable/geist-mono";
 
 @tailwind base;
 @tailwind components;
@@ -14,21 +12,24 @@
     html { scroll-behavior: smooth; }
   }
   body { @apply bg-bg text-ink font-sans antialiased; }
-  ::selection { background: #ffb547; color: #0f110e; }
-  :focus-visible { outline: 2px solid #ffb547; outline-offset: 3px; border-radius: 6px; }
+  /* No orphaned words: balanced headings, "pretty" paragraphs. */
+  h1, h2, h3, h4 { text-wrap: balance; }
+  p, li, dd, blockquote { text-wrap: pretty; }
+  ::selection { background: #ffb547; color: #131209; }
+  :focus-visible { outline: 2px solid #ffb547; outline-offset: 2px; border-radius: 6px; }
+
+  /* Reduced motion: movement becomes a plain fade (Framer Motion handles its own via MotionConfig). */
+  @media (prefers-reduced-motion: reduce) {
+    *, ::before, ::after {
+      animation-iteration-count: 1 !important;
+      transition-property: opacity, color, background-color, border-color !important;
+    }
+  }
 }
 
 @layer components {
-  /* Graph-paper backdrop, faded toward the edges. */
-  .graph-paper {
-    background-image:
-      linear-gradient(to right, rgba(236, 232, 223, 0.05) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(236, 232, 223, 0.05) 1px, transparent 1px);
-    background-size: 48px 48px;
-    mask-image: radial-gradient(ellipse 80% 70% at 50% 40%, #000 30%, transparent 75%);
-  }
   .chip {
-    @apply inline-flex items-center rounded-md border border-line bg-surface px-3 py-1.5 text-sm text-ink/90;
+    @apply inline-flex items-center rounded-md border border-line bg-surface px-3 py-1 text-sm text-ink/90;
   }
-  .eyebrow { @apply font-mono text-xs uppercase tracking-[0.18em] text-amber; }
+  .eyebrow { @apply text-sm font-medium text-amber; }
 }
